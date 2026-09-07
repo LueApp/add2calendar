@@ -1,0 +1,49 @@
+:root { color-scheme: light; font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; color: #243c37; background: #f3f6f3; }
+* { box-sizing: border-box; }
+body { margin: 0; font-size: 15px; line-height: 1.6; }
+main { max-width: 880px; margin: 52px auto; padding: 0 24px 40px; }
+header { display: flex; align-items: center; justify-content: space-between; gap: 24px; margin-bottom: 36px; }
+.brand { display: flex; gap: 12px; align-items: center; font-size: 14px; font-weight: 650; }
+.mark { width: 38px; height: 38px; display: grid; place-items: center; background: #176b57; color: #fff; border-radius: 12px; font-size: 21px; }
+.eyebrow { color: #648178; text-transform: uppercase; letter-spacing: .13em; font-size: 11px; font-weight: 700; margin: 0 0 9px; }
+h1 { font-size: 30px; line-height: 1.25; letter-spacing: -.025em; margin: 0 0 14px; font-weight: 650; }
+h2 { font-size: 17px; margin: 0 0 15px; }
+p { margin: 0 0 16px; }
+.muted, small { color: #637a71; }
+.card { background: #fff; border: 1px solid #dfe7e1; border-radius: 16px; padding: 26px; margin: 22px 0; box-shadow: 0 2px 6px #1b3b2b03; }
+.grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 7px; }
+input:not([type=checkbox]), select { width: 100%; border: 1px solid #cbd9d0; border-radius: 8px; padding: 10px 12px; background: #fff; color: #243c37; font: inherit; }
+input:focus, select:focus { outline: 2px solid #78b5a2; outline-offset: 1px; }
+input[type=checkbox] { accent-color: #176b57; width: 17px; height: 17px; flex-shrink: 0; }
+.field { margin-bottom: 18px; }
+.help { font-size: 12px; margin: 6px 0 0; color: #637a71; }
+button, .button { border: 1px solid #176b57; border-radius: 8px; background: #176b57; padding: 10px 17px; color: white; font: 600 14px/1.4 system-ui, sans-serif; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; gap: 8px; }
+button:hover, .button:hover { background: #105443; }
+button:disabled { opacity: .55; cursor: default; }
+button:focus-visible, a:focus-visible { outline: 3px solid #78b5a2; outline-offset: 3px; }
+.secondary { background: #fff; color: #176b57; border-color: #cbd9d0; }
+.secondary:hover { background: #edf5ef; }
+a { color: #176b57; text-underline-offset: 3px; }
+.actions { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-top: 20px; }
+.session { display: flex; align-items: flex-start; gap: 13px; padding: 16px 0; border-top: 1px solid #edf1ed; }
+.session label { flex: 1; margin: 0; font-size: 14px; font-weight: 400; }
+.session strong { display: block; font-weight: 600; }
+.session small { display: block; }
+.session a { font-size: 12px; white-space: nowrap; }
+.badge { display: inline-block; border-radius: 20px; background: #edf5ef; color: #477360; font-size: 12px; padding: 4px 10px; }
+#status { margin-top: 16px; padding: 12px 16px; border-radius: 8px; background: #edf5ef; white-space: pre-line; }
+#status.error { background: #fff0e8; color: #8a431f; }
+[hidden] { display: none !important; }
+.footnote { font-size: 12px; color: #718277; margin-top: 24px; }
+details summary { cursor: pointer; color: #55776a; font-size: 13px; }
+pre { white-space: pre-wrap; font: inherit; font-size: 13px; }
+.batch-event { margin-top: 25px; padding-top: 18px; border-top: 1px solid #dfe7e1; }
+.batch-event-header { display: flex; align-items: flex-start; gap: 13px; margin-bottom: 12px; }
+.batch-event-header label { margin: 0; font-size: 16px; }
+.batch-event-header small { display: block; font-size: 12px; font-weight: 400; }
+.batch-event .session { margin-left: 30px; }
+.import-guide { margin-top: 18px; padding: 18px; border: 1px solid #d4e3d8; border-radius: 10px; background: #f5f9f5; }
+.import-guide p { font-size: 13px; margin: 8px 0 14px; }
+#selection-count { font-size: 13px; color: #55776a; }
+@media (max-width: 600px) { main { margin-top: 24px; padding: 0 16px; } .grid { grid-template-columns: 1fr; } .card { padding: 20px; } h1 { font-size: 25px; } .session { flex-wrap: wrap; } }

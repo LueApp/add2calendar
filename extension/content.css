@@ -1,0 +1,27 @@
+.pdc-calendar-action {
+  display: block;
+  margin: 6px 0;
+  padding: 6px 9px;
+  border: 1px solid #b2d8d0;
+  border-radius: 6px;
+  background: #edf8f5;
+  color: #116957;
+  font: 500 12px/1.4 system-ui, sans-serif;
+  white-space: normal;
+  cursor: pointer;
+}
+.pdc-calendar-action:hover { background: #d9f0e9; border-color: #438d7e; }
+.pdc-calendar-action:focus-visible { outline: 3px solid #238675; outline-offset: 2px; }
+.pdc-calendar-action:disabled { opacity: .65; cursor: wait; }
+#pdc-calendar-status {
+  position: fixed; bottom: 20px; right: 20px; z-index: 9999;
+  max-width: 410px; padding: 16px 20px; border: 1px solid #dcc796;
+  border-radius: 10px; background: #fff9e9; color: #59431a;
+  box-shadow: 0 6px 24px #0002; font: 14px/1.6 system-ui, sans-serif;
+}
+#pdc-calendar-status[hidden] { display: none; }
+#pdc-calendar-batch { display: flex; flex-wrap: wrap; align-items: center; gap: 14px; margin: 14px 0; font: 13px/1.5 system-ui, sans-serif; color: #55756b; }
+.pdc-calendar-batch-action { border: 1px solid #176b57; background: #176b57; color: #fff; border-radius: 7px; padding: 9px 14px; font: 600 13px/1.5 system-ui, sans-serif; cursor: pointer; }
+.pdc-calendar-batch-action:hover { background: #105443; }
+.pdc-calendar-batch-action:focus-visible { outline: 3px solid #78b5a2; outline-offset: 2px; }
+.pdc-calendar-batch-action:disabled { opacity: .6; cursor: wait; }

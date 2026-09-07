@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Add to calendar · PDC</title><link rel="stylesheet" href="styles.css"></head>
+<body><main>
+  <header><div class="brand"><span class="mark" aria-hidden="true">▦</span>PDC Calendar</div><a href="options.html" target="_blank" rel="noopener">Settings</a></header>
+  <p class="eyebrow">Make time for learning</p><h1 id="title">Preparing your event…</h1><p class="muted" id="subtitle">Loading seminar details from PDC.</p>
+  <div id="content" hidden>
+    <section class="card"><div class="grid">
+      <div><label for="provider">Add to</label><select id="provider"><option value="outlook-school">Outlook · school / Microsoft 365</option><option value="outlook-personal">Outlook.com · personal</option><option value="google">Google Calendar</option><option value="nextcloud">Nextcloud</option><option value="ics">Calendar file (.ics)</option></select></div>
+      <div><label for="reminder">Reminder for Nextcloud / calendar file</label><select id="reminder"><option value="0">No reminder</option><option value="5">5 minutes before</option><option value="15" selected>15 minutes before</option><option value="30">30 minutes before</option><option value="60">1 hour before</option><option value="1440">1 day before</option></select></div>
+    </div><p class="help" id="provider-help"></p></section>
+    <section class="card"><h2>Sessions <span id="count" class="badge"></span></h2><p class="help">All times below are China Standard Time (UTC+08:00).</p><div id="sessions"></div>
+      <div class="actions"><button id="add">Add to calendar</button><button id="download" class="secondary">Download .ics</button></div>
+      <div id="status" role="status" hidden></div>
+      <div id="outlook-import" class="import-guide" hidden><strong>Import all selected sessions once</strong><p>In Outlook: Calendar → Add calendar → Upload from file → choose the downloaded .ics file → select your calendar → Import (or Import and Save).</p><a id="open-outlook" class="button secondary" target="_blank" rel="noopener noreferrer">Open Outlook ↗</a></div>
+    </section>
+    <details><summary>Event details</summary><pre id="description"></pre></details>
+    <p class="footnote">This adds a copy of the event. Later PDC changes and cancellations are not synchronized. Check PDC for updates.</p>
+  </div><p id="fatal" role="alert" hidden></p>
+</main><script type="module" src="event.js"></script></body></html>
