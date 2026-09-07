@@ -6,6 +6,16 @@ A Chrome extension that adds **Add to calendar** and **Add multiple events** but
 
 **[Download v0.2.0](https://github.com/LueApp/pdc-calendar-extension/releases/download/v0.2.0/pdc-calendar-0.2.0.zip)** · [All releases](https://github.com/LueApp/pdc-calendar-extension/releases) · [Report an issue](https://github.com/LueApp/pdc-calendar-extension/issues)
 
+## Website
+
+The bilingual project website is a dependency-free static site in `site/`. Build it with:
+
+```sh
+npm run site:build
+```
+
+The deployable site is written to `web-dist/` and includes the current extension ZIP. For a Git-connected Cloudflare Pages project, use **`npm run site:build`** as the build command and **`web-dist`** as the output directory. No environment variables are required.
+
 ## Features
 
 - Calendar buttons on **Event Enrollment** and **Enrollment Records**.

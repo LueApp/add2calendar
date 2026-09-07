@@ -6,6 +6,16 @@
 
 **[下载 v0.2.0](https://github.com/LueApp/pdc-calendar-extension/releases/download/v0.2.0/pdc-calendar-0.2.0.zip)** · [全部版本](https://github.com/LueApp/pdc-calendar-extension/releases) · [反馈问题](https://github.com/LueApp/pdc-calendar-extension/issues)
 
+## 项目网站
+
+中英文项目网站位于 `site/`，不依赖任何前端框架。运行以下命令构建：
+
+```sh
+npm run site:build
+```
+
+可部署的网站会生成到 `web-dist/`，其中包含当前版本的扩展 ZIP。在 Cloudflare Pages 控制台连接 Git 仓库时，将构建命令设为 **`npm run site:build`**，输出目录设为 **`web-dist`**。无需配置环境变量。
+
 ## 主要功能
 
 - 在 **Event Enrollment（活动报名）** 和 **Enrollment Records（报名记录）** 页面添加日历按钮。

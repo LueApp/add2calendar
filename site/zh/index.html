@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#f7f4ee" />
+    <meta name="description" content="将香港科技大学（广州）PDC 活动添加到 Outlook、Google 日历、Nextcloud 或 iCalendar 文件。" />
+    <title>PDC · 添加到日历</title>
+    <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="/assets/site.css" />
+    <link rel="alternate" hreflang="en" href="/" />
+    <link rel="alternate" hreflang="zh-CN" href="/zh/" />
+    <link rel="alternate" hreflang="x-default" href="/" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">跳到主要内容</a>
+
+    <header class="site-header">
+      <a class="brand" href="/zh/" aria-label="PDC 添加到日历首页">
+        <span class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 32 32"><rect x="4" y="6" width="24" height="22" rx="6" /><path d="M4 13h24M10 3v6M22 3v6M11 18h4v4h-4zM19 18h4v4h-4z" /></svg>
+        </span>
+        <span>PDC <span class="brand-muted">· 添加到日历</span></span>
+      </a>
+      <nav aria-label="主要导航">
+        <a href="#how-it-works">使用方法</a>
+        <a href="#calendars">支持的日历</a>
+        <a href="https://github.com/LueApp/pdc-calendar-extension" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a class="language-link" href="/" lang="en" hreflang="en">English</a>
+      </nav>
+    </header>
+
+    <main id="main">
+      <section class="hero" aria-labelledby="hero-title">
+        <div class="hero-copy">
+          <p class="eyebrow"><span></span> 为香港科技大学（广州）打造的小型 Chrome 扩展</p>
+          <h1 id="hero-title">几次点击，将 PDC 活动加入你的日历。</h1>
+          <p class="hero-lede">把已报名的讲座添加到 Outlook、Google 日历、Nextcloud 或 <code>.ics</code> 文件——单个添加或批量导出都可以。</p>
+          <div class="hero-actions">
+            <a class="button button-primary" href="/downloads/pdc-calendar-0.2.0.zip" download>
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m0 0 5-5m-5 5-5-5M5 21h14" /></svg>
+              下载 v0.2.0
+            </a>
+            <a class="button button-secondary" href="https://github.com/LueApp/pdc-calendar-extension" target="_blank" rel="noopener noreferrer">在 GitHub 查看 <span aria-hidden="true">↗</span></a>
+          </div>
+          <ul class="hero-facts" aria-label="运行要求和项目信息"><li>Chrome 120+</li><li>无需注册账号</li><li>MIT 开源许可</li></ul>
+        </div>
+
+        <div class="hero-visual" aria-label="将 PDC 活动添加到日历的界面预览">
+          <div class="orbit orbit-one" aria-hidden="true"></div><div class="orbit orbit-two" aria-hidden="true"></div>
+          <div class="browser-card">
+            <div class="browser-bar" aria-hidden="true"><span></span><span></span><span></span><div>pdc.hkust-gz.edu.cn</div></div>
+            <div class="browser-content">
+              <p class="mock-kicker">报名记录</p><h2>你已报名的活动</h2>
+              <article class="event-row"><div class="date-tile"><strong>12</strong><span>9 月</span></div><div><strong>研究研讨会</strong><span>14:00 · E1 202</span></div><span class="mock-action">添加到日历</span></article>
+              <article class="event-row event-row-muted"><div class="date-tile"><strong>18</strong><span>9 月</span></div><div><strong>创新工作坊</strong><span>10:30 · W2 115</span></div><span class="mock-action">添加到日历</span></article>
+            </div>
+          </div>
+          <div class="calendar-popover"><span class="success-dot" aria-hidden="true">✓</span><div><strong>Outlook 文件已就绪</strong><span>2 个场次 · 1 个 .ics 文件</span></div></div>
+        </div>
+      </section>
+
+      <section class="quick-features" aria-label="主要特点">
+        <article><span class="feature-number">01</span><div><h2>单个或批量</h2><p>添加单个场次，或跨所有报名分页选择多个活动。</p></div></article>
+        <article><span class="feature-number">02</span><div><h2>选择你的日历</h2><p>支持 Outlook、Google 日历、Nextcloud、Apple 日历等。</p></div></article>
+        <article><span class="feature-number">03</span><div><h2>隐私优先</h2><p>没有数据统计或后端。PDC 令牌只在扩展与 PDC 之间使用。</p></div></article>
+      </section>
+
+      <section class="workflow section" id="how-it-works" aria-labelledby="workflow-title">
+        <div class="section-heading"><p class="eyebrow"><span></span> 安装方法</p><h2 id="workflow-title">三步开始使用。</h2><p>扩展尚未上架 Chrome 应用商店，因此需要手动安装。</p></div>
+        <ol class="steps">
+          <li><span class="step-index">01</span><div><h3>下载并解压</h3><p>下载上方 ZIP 文件，将其解压到一个以后不会随意移动的文件夹。</p></div></li>
+          <li><span class="step-index">02</span><div><h3>加载扩展</h3><p>打开 <code>chrome://extensions</code>，开启<strong>开发者模式</strong>，点击<strong>加载已解压的扩展程序</strong>。选择根目录中直接包含 <code>manifest.json</code> 的文件夹。</p></div></li>
+          <li><span class="step-index">03</span><div><h3>打开 PDC</h3><p>正常登录 PDC，进入 <strong>Event Enrollment</strong> 或 <strong>Enrollment Records</strong>，使用已报名活动旁新增的日历按钮。</p></div></li>
+        </ol>
+      </section>
+
+      <section class="preview-section section" aria-labelledby="preview-title">
+        <div class="preview-frame"><img src="/assets/batch-preview.png" alt="批量活动预览，显示两个虚构研讨会和 Outlook 导入选项" loading="lazy" width="1260" height="840" /></div>
+        <div class="preview-copy">
+          <p class="eyebrow"><span></span> 批量导出</p><h2 id="preview-title">把一周的活动都带走。</h2>
+          <p>选择需要的活动和场次，再生成一个整洁的日历文件。每个活动会保留自己的名称、时间、地点、讲者和 PDC 来源链接。</p>
+          <ul class="check-list"><li><span>✓</span> 读取所有报名分页</li><li><span>✓</span> 支持一个活动包含多个场次</li><li><span>✓</span> 使用中国标准时间（UTC+08:00）</li></ul>
+          <p class="caption">预览使用虚构活动数据。</p>
+        </div>
+      </section>
+
+      <section class="calendar-section section" id="calendars" aria-labelledby="calendar-title">
+        <div class="section-heading section-heading-centered"><p class="eyebrow"><span></span> 导出目标</p><h2 id="calendar-title">适配你已经在用的日历。</h2></div>
+        <div class="calendar-grid">
+          <article><span class="calendar-icon outlook" aria-hidden="true">O</span><h3>Microsoft Outlook</h3><p>支持学校 Microsoft 365 和个人 Outlook.com 账号。</p></article>
+          <article><span class="calendar-icon google" aria-hidden="true">31</span><h3>Google 日历</h3><p>打开预填的单个活动，或导入合并后的日历文件。</p></article>
+          <article><span class="calendar-icon nextcloud" aria-hidden="true">☁</span><h3>Nextcloud</h3><p>完成可选设置后，通过 CalDAV 直接添加。</p></article>
+          <article><span class="calendar-icon ics" aria-hidden="true">.ics</span><h3>其他日历应用</h3><p>可导入 Apple 日历、Thunderbird 等应用。</p></article>
+        </div>
+        <aside class="notice"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" /><path d="M12 11v6M12 7.5v.5" /></svg><p><strong>请继续留意 PDC。</strong>导入的活动是副本，后续改期和取消不会自动同步。</p></aside>
+      </section>
+
+      <section class="download-section" aria-labelledby="download-title">
+        <div><p class="eyebrow light"><span></span> 版本 0.2.0</p><h2 id="download-title">让下一场 PDC 活动出现在你的日历里。</h2><p>免费、开源，为香港科技大学（广州）学生打造。</p></div>
+        <div class="download-actions">
+          <a class="button button-light" href="/downloads/pdc-calendar-0.2.0.zip" download><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m0 0 5-5m-5 5-5-5M5 21h14" /></svg>下载扩展</a>
+          <a href="https://github.com/LueApp/pdc-calendar-extension/releases" target="_blank" rel="noopener noreferrer">查看全部版本 ↗</a>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <a class="footer-brand" href="https://lue-app.com/" target="_blank" rel="me noopener noreferrer"><span class="footer-mark">L</span><span><strong>看看 Lue 的其他作品</strong><small>为日常工作做一些小工具。</small></span><span aria-hidden="true">↗</span></a>
+      <div class="footer-links"><a href="https://github.com/LueApp/pdc-calendar-extension" target="_blank" rel="noopener noreferrer">GitHub</a><a href="https://github.com/LueApp/pdc-calendar-extension/blob/main/PRIVACY.zh-CN.md" target="_blank" rel="noopener noreferrer">隐私说明</a><a href="https://github.com/LueApp/pdc-calendar-extension/issues" target="_blank" rel="noopener noreferrer">反馈问题</a></div>
+    </footer>
+  </body>
+</html>
