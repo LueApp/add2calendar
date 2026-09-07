@@ -112,10 +112,10 @@ This optional tool can review and delete **any events in your Outlook calendar**
 
 Microsoft requires a registered Entra application and delegated `Calendars.ReadWrite` access:
 
-1. In Microsoft Entra, create an app registration for the account types you intend to support.
+1. In Microsoft Entra, create an app registration for the account types you intend to support. A single-tenant app is supported; copy its **Directory (tenant) ID** from the Overview page.
 2. Under **Authentication**, add a **Single-page application** redirect URI. Copy the exact redirect URL shown in Add2Calendar Settings; it is unique to the installed extension.
 3. Under **API permissions**, add Microsoft Graph → Delegated permissions → `Calendars.ReadWrite`.
-4. Copy the application’s **Application (client) ID** into Add2Calendar Settings and click **Activate Outlook cleanup**.
+4. Copy the application’s **Application (client) ID** into Add2Calendar Settings. For a single-tenant app, also paste its **Directory (tenant) ID** instead of `common`, then click **Activate Outlook cleanup**.
 5. Click **Open cleanup tool**, then **Connect and review events**. Microsoft shows the requested permission before continuing.
 6. Choose a calendar and date range, load events, filter and select the entries to remove, then click **Review deletion**.
 7. Review organizer-meeting and recurrence warnings, tick the confirmation box, and delete the selected events.
@@ -156,6 +156,7 @@ Read the [privacy details](PRIVACY.md) and [validation notes](VALIDATION.md).
 | Nextcloud rejects the connection | Check the specific calendar’s private URL, actual username, app password, and write access. |
 | Some Nextcloud additions fail | Check the result counts and retry. Successfully added identical sessions are skipped. |
 | Outlook cleanup cannot connect | Verify the Entra client ID, exact redirect URL, SPA platform type, delegated `Calendars.ReadWrite` permission, and any school-tenant consent policy. |
+| Microsoft shows AADSTS50194 | The app is single-tenant but the authority is `common`. Paste the app’s Directory (tenant) ID into **Microsoft tenant authority**, then activate again. |
 
 When reporting an issue, include the extension version and error text. Remove tokens, app passwords, student identifiers, and private event details from screenshots or logs.
 
@@ -186,7 +187,7 @@ The ZIP is written to `dist/`. To load the source directly, select `extension/` 
 | `scripts/browser-test.mjs` | Actual extension tested against simulated PDC, SIS, and calendar responses |
 | `scripts/package.py` | Creates the ZIP with `manifest.json` at its root |
 
-Version 0.4.0 passed **26 unit tests and 15 browser integration checks**. Automated tests do not write to real student calendars. See [VALIDATION.md](VALIDATION.md) for test scope and live checks still needed.
+Version 0.4.1 passed **26 unit tests and 15 browser integration checks**. Automated tests do not write to real student calendars. See [VALIDATION.md](VALIDATION.md) for test scope and live checks still needed.
 
 ## License and references
 

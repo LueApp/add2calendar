@@ -1,15 +1,26 @@
 import { t } from './i18n.mjs';
 
 const GRAPH_ROOT = 'https://graph.microsoft.com/v1.0';
-const LOGIN_ROOT = 'https://login.microsoftonline.com/common/oauth2/v2.0';
 const SCOPES = 'openid profile https://graph.microsoft.com/Calendars.ReadWrite';
 const CLIENT_ID = /^[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}$/i;
+const TENANT_ID = /^[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}$/i;
 const DATE = /^\d{4}-\d{2}-\d{2}$/;
 
 export function validateClientId(value) {
   const clientId = String(value || '').trim();
   if (!CLIENT_ID.test(clientId)) throw new Error(t('invalidMicrosoftClientId', undefined, 'Enter a valid Microsoft application client ID.'));
   return clientId;
+}
+
+export function validateTenant(value = 'common') {
+  const tenant = String(value || '').trim().toLowerCase();
+  if (!TENANT_ID.test(tenant) && !['common', 'organizations', 'consumers'].includes(tenant))
+    throw new Error(t('invalidMicrosoftTenant', undefined, 'Enter a Directory (tenant) ID, common, organizations, or consumers.'));
+  return tenant;
+}
+
+function loginRoot(tenant) {
+  return `https://login.microsoftonline.com/${encodeURIComponent(validateTenant(tenant))}/oauth2/v2.0`;
 }
 
 function base64url(bytes) {
@@ -23,8 +34,8 @@ export async function createPkce() {
   return { verifier, challenge: base64url(new Uint8Array(digest)) };
 }
 
-export function authorizationUrl({ clientId, redirectUri, state, challenge }) {
-  const url = new URL(`${LOGIN_ROOT}/authorize`);
+export function authorizationUrl({ clientId, tenant = 'common', redirectUri, state, challenge }) {
+  const url = new URL(`${loginRoot(tenant)}/authorize`);
   url.search = new URLSearchParams({
     client_id: validateClientId(clientId), response_type: 'code', redirect_uri: redirectUri,
     response_mode: 'query', scope: SCOPES, state,
@@ -33,8 +44,8 @@ export function authorizationUrl({ clientId, redirectUri, state, challenge }) {
   return url.href;
 }
 
-export async function exchangeCode({ clientId, redirectUri, code, verifier }, fetcher = fetch) {
-  const response = await fetcher(`${LOGIN_ROOT}/token`, {
+export async function exchangeCode({ clientId, tenant = 'common', redirectUri, code, verifier }, fetcher = fetch) {
+  const response = await fetcher(`${loginRoot(tenant)}/token`, {
     method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
     body: new URLSearchParams({ client_id: validateClientId(clientId), grant_type: 'authorization_code', code, redirect_uri: redirectUri, code_verifier: verifier, scope: SCOPES }),
     credentials: 'omit', redirect: 'error', cache: 'no-store'

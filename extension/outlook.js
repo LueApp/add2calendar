@@ -88,14 +88,14 @@ async function connect() {
     const redirectUri = chrome.identity.getRedirectURL('outlook');
     const { verifier, challenge } = await createPkce();
     const state = crypto.randomUUID();
-    const finalUrl = await chrome.identity.launchWebAuthFlow({ url: authorizationUrl({ clientId: config.clientId, redirectUri, state, challenge }), interactive: true });
+    const finalUrl = await chrome.identity.launchWebAuthFlow({ url: authorizationUrl({ clientId: config.clientId, tenant: config.tenant || 'common', redirectUri, state, challenge }), interactive: true });
     if (!finalUrl) throw new Error(t('microsoftSignInCancelled'));
     const result = new URL(finalUrl);
     if (result.searchParams.get('state') !== state) throw new Error(t('microsoftStateMismatch'));
     if (result.searchParams.get('error')) throw new Error(result.searchParams.get('error_description') || result.searchParams.get('error'));
     const code = result.searchParams.get('code');
     if (!code) throw new Error(t('microsoftNoCode'));
-    ({ accessToken, expiresAt } = await exchangeCode({ clientId: config.clientId, redirectUri, code, verifier }));
+    ({ accessToken, expiresAt } = await exchangeCode({ clientId: config.clientId, tenant: config.tenant || 'common', redirectUri, code, verifier }));
     calendars = await loadCalendars(accessToken);
     if (!calendars.length) throw new Error(t('noWritableCalendars'));
     $('outlook-calendar').replaceChildren(...calendars.map(calendar => new Option(`${calendar.name}${calendar.isDefaultCalendar ? ` · ${t('defaultCalendar')}` : ''}`, calendar.id)));

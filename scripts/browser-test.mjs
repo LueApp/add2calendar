@@ -300,10 +300,11 @@ try {
     chrome.permissions.remove = async () => true;
   });
   await settings.locator('#microsoft-client-id').fill('12345678-1234-4123-8123-123456789abc');
+  await settings.locator('#microsoft-tenant').fill('aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee');
   await settings.locator('#activate-outlook-cleanup').click();
   await settings.locator('#open-outlook-cleanup:not([hidden])').waitFor();
   const cleanupConfig = await worker.evaluate(async () => (await chrome.storage.local.get('outlookCleanup')).outlookCleanup);
-  assert.deepEqual(cleanupConfig, { enabled: true, clientId: '12345678-1234-4123-8123-123456789abc' });
+  assert.deepEqual(cleanupConfig, { enabled: true, clientId: '12345678-1234-4123-8123-123456789abc', tenant: 'aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee' });
 
   const cleanup = await context.newPage();
   await cleanup.addInitScript(() => {

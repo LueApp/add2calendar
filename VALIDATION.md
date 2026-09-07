@@ -1,6 +1,6 @@
 # Validation — 2026-09-07
 
-Version: **0.4.0**. Runtime: no dependencies or build step. Minimum Chrome version: 120.
+Version: **0.4.1**. Runtime: no dependencies or build step. Minimum Chrome version: 120.
 
 ## Completed
 

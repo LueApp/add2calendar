@@ -266,5 +266,8 @@
   "graphSessionExpired": { "message": "Your Microsoft session expired. Connect again." },
   "graphHttp": { "message": "Microsoft Graph returned HTTP $STATUS$.", "placeholders": { "status": { "content": "$1" } } },
   "invalidCalendarRange": { "message": "Choose a valid calendar and date range." },
-  "selectOutlookFirst": { "message": "Select at least one Outlook event." }
+  "selectOutlookFirst": { "message": "Select at least one Outlook event." },
+  "microsoftTenant": { "message": "Microsoft tenant authority" },
+  "tenantHelp": { "message": "For a single-tenant application, paste its Directory (tenant) ID. Use common only for an application configured for organizational and personal Microsoft accounts." },
+  "invalidMicrosoftTenant": { "message": "Enter a Directory (tenant) ID, common, organizations, or consumers." }
 }

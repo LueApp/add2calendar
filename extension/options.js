@@ -1,6 +1,6 @@
 import { calendarURL } from './lib/calendar.mjs';
 import { basicAuth } from './lib/caldav.mjs';
-import { validateClientId } from './lib/outlook.mjs';
+import { validateClientId, validateTenant } from './lib/outlook.mjs';
 const { t, localizeDocument } = globalThis.Add2CalendarI18n;
 localizeDocument();
 const $ = id => document.getElementById(id);
@@ -23,6 +23,7 @@ async function load() {
   $('password-help').textContent = saved?.appPassword ? t('savedAppPassword') : t('separateAppPassword');
   $('disconnect').disabled = !saved;
   $('microsoft-client-id').value = outlookCleanup?.clientId || '';
+  $('microsoft-tenant').value = outlookCleanup?.tenant || 'common';
   $('outlook-redirect-url').textContent = chrome.identity.getRedirectURL('outlook');
   $('open-outlook-cleanup').hidden = !outlookCleanup?.enabled;
   $('deactivate-outlook-cleanup').hidden = !outlookCleanup?.enabled;
@@ -67,9 +68,10 @@ $('disconnect').addEventListener('click', async () => {
 $('activate-outlook-cleanup').addEventListener('click', async () => {
   try {
     const clientId = validateClientId($('microsoft-client-id').value);
+    const tenant = validateTenant($('microsoft-tenant').value);
     const granted = await chrome.permissions.request({ origins: ['https://login.microsoftonline.com/*', 'https://graph.microsoft.com/*'] });
     if (!granted) throw new Error(t('cleanupPermissionDenied'));
-    await chrome.storage.local.set({ outlookCleanup: { enabled: true, clientId } });
+    await chrome.storage.local.set({ outlookCleanup: { enabled: true, clientId, tenant } });
     await load(); status(t('cleanupActivated'));
   } catch (error) { status(error.message, true); }
 });

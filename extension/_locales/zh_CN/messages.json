@@ -266,5 +266,8 @@
   "graphSessionExpired": { "message": "Microsoft 会话已过期，请重新连接。" },
   "graphHttp": { "message": "Microsoft Graph 返回 HTTP $STATUS$。", "placeholders": { "status": { "content": "$1" } } },
   "invalidCalendarRange": { "message": "请选择有效的日历和日期范围。" },
-  "selectOutlookFirst": { "message": "请至少选择一个 Outlook 日程。" }
+  "selectOutlookFirst": { "message": "请至少选择一个 Outlook 日程。" },
+  "microsoftTenant": { "message": "Microsoft 租户颁发机构" },
+  "tenantHelp": { "message": "单租户应用请填写其目录（租户）ID。只有应用已配置为支持组织账号和个人 Microsoft 账号时才使用 common。" },
+  "invalidMicrosoftTenant": { "message": "请输入目录（租户）ID、common、organizations 或 consumers。" }
 }

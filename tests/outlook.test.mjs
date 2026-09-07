@@ -1,11 +1,14 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { authorizationUrl, calendarViewUrl, createPkce, deleteEvents, eventRisk, exchangeCode, loadEvents, validateClientId } from '../extension/lib/outlook.mjs';
+import { authorizationUrl, calendarViewUrl, createPkce, deleteEvents, eventRisk, exchangeCode, loadEvents, validateClientId, validateTenant } from '../extension/lib/outlook.mjs';
 
 const clientId = '12345678-1234-4123-8123-123456789abc';
 
 test('Outlook OAuth uses PKCE, the exact redirect, and calendar-only access', async () => {
   assert.equal(validateClientId(clientId), clientId);
+  assert.equal(validateTenant('COMMON'), 'common');
+  assert.equal(validateTenant('aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee'), 'aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee');
+  assert.throws(() => validateTenant('not/a/tenant'));
   assert.throws(() => validateClientId('not-an-app'));
   const pkce = await createPkce();
   assert.match(pkce.verifier, /^[A-Za-z0-9_-]{80,90}$/);
@@ -25,6 +28,8 @@ test('Outlook OAuth uses PKCE, the exact redirect, and calendar-only access', as
   assert.equal(token.accessToken, 'token');
   assert.equal(tokenBody.get('code_verifier'), pkce.verifier);
   assert.equal(tokenBody.get('scope'), 'openid profile https://graph.microsoft.com/Calendars.ReadWrite');
+  const tenantUrl = new URL(authorizationUrl({ clientId, tenant: 'aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee', redirectUri: 'https://example.chromiumapp.org/outlook', state: 'state-2', challenge: pkce.challenge }));
+  assert.match(tenantUrl.pathname, /^\/aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee\/oauth2\/v2\.0\/authorize$/);
 });
 
 test('Outlook calendar ranges use China-day boundaries and reject invalid input', () => {
