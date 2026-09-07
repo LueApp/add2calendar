@@ -163,7 +163,7 @@ The ZIP is written to `dist/`. To load the source directly, select `extension/` 
 | `scripts/browser-test.mjs` | Actual extension tested against simulated PDC, SIS, and calendar responses |
 | `scripts/package.py` | Creates the ZIP with `manifest.json` at its root |
 
-Version 0.3.0 passed **20 unit tests and 13 browser integration checks**. Automated tests do not write to real student calendars. See [VALIDATION.md](VALIDATION.md) for test scope and live checks still needed.
+Version 0.3.1 passed **20 unit tests and 14 browser integration checks**. Automated tests do not write to real student calendars. See [VALIDATION.md](VALIDATION.md) for test scope and live checks still needed.
 
 ## License and references
 

@@ -28,6 +28,7 @@ const sisCourse = {
   meetingInfoList: [{ startDate: '2026-09-07', endDate: '2026-09-18', weekDay: '1,3', meetingStartTime: '10:00', meetingEndTime: '11:30', facilityName: 'Synthetic Room 101', instructorList: [{ instructorName: 'Dr. Example', instructorRoleInd: 'PI' }] }]
 };
 const sisHtml = `<!doctype html><html><head><title>SIS test fixture</title></head><body><main><h1>My Class Schedule</h1></main><script>fetch('/api/student/queryMyClassSchedulePage',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({synthetic:true})});</script></body></html>`;
+const sisDomHtml = `<!doctype html><html><head><title>SIS DOM fixture</title></head><body><div class="el-table"><div class="el-table__header-wrapper"><table><thead><tr><th></th><th>Course</th><th>Section</th><th>Description</th><th>Status</th><th>Waitlist Position</th><th>Waitlist Message</th><th>Credit(s)</th><th>Date &amp; Time</th><th>Location</th><th>Instructor</th></tr></thead></table></div><div class="el-table__body-wrapper"><table><tbody><tr><td></td><td>COMP 5001</td><td>L1 (1234)</td><td>Synthetic Systems Seminar</td><td>Enrolled</td><td>-</td><td>-</td><td>3</td><td><div class="column-row">01-SEP-2026 - 07-DEC-2026 Mo 10:00AM - 11:30AM</div><div class="column-row">01-SEP-2026 - 07-DEC-2026 We 10:00AM - 11:30AM</div></td><td><div class="column-row">Synthetic Room 101</div><div class="column-row">Synthetic Room 202</div></td><td><div class="column-row">Dr. Example</div><div class="column-row">Dr. Example</div></td></tr></tbody></table></div></div></body></html>`;
 
 await context.route('https://**/*', async route => {
   const request = route.request(), url = new URL(request.url());
@@ -47,7 +48,7 @@ await context.route('https://**/*', async route => {
     if (url.pathname === '/favicon.ico') { await route.fulfill({ status: 204 }); return; }
   }
   if (url.hostname === 'sisn.hkust-gz.edu.cn') {
-    if (url.pathname === '/classes/my-class-schedule') { await route.fulfill({ contentType: 'text/html', body: sisHtml }); return; }
+    if (url.pathname === '/classes/my-class-schedule') { await route.fulfill({ contentType: 'text/html', body: url.searchParams.has('dom') ? sisDomHtml : sisHtml }); return; }
     if (url.pathname === '/api/student/queryMyClassSchedulePage') {
       assert.equal(request.method(), 'POST');
       await route.fulfill({ json: { code: '0', data: [sisCourse, { ...sisCourse, classId: 'WAITLISTED', enrollmentStatus: 'waitlistSuccess', enrollmentStatusEnDesc: 'Waitlisted' }] } });
@@ -265,6 +266,20 @@ try {
   assert.match(sisText, /UID:sis-[a-f0-9]{64}@add2calendar\.local/);
   assert.match(sisText, /URL:https:\/\/sisn\.hkust-gz\.edu\.cn\/classes\/my-class-schedule/);
   console.log('PASS: SIS schedule response creates a calendar button and exports enrolled recurring classes');
+
+  const sisDom = await context.newPage();
+  await sisDom.goto('https://sisn.hkust-gz.edu.cn/classes/my-class-schedule?dom=1');
+  await sisDom.locator('#add2calendar-sis-toolbar button:not(:disabled)').waitFor();
+  assert.equal(await sisDom.locator('#add2calendar-sis-toolbar span').textContent(), '1 enrolled class ready');
+  const sisDomBatchOpened = context.waitForEvent('page');
+  await sisDom.locator('#add2calendar-sis-toolbar button').click();
+  const sisDomBatch = await sisDomBatchOpened;
+  await sisDomBatch.locator('#content:not([hidden])').waitFor();
+  assert.equal(await sisDomBatch.locator('.batch-event').count(), 1);
+  assert.equal(await sisDomBatch.locator('.session').count(), 28);
+  assert.match(await sisDomBatch.locator('.batch-event').textContent(), /Synthetic Room 101/);
+  assert.match(await sisDomBatch.locator('.batch-event').textContent(), /Synthetic Room 202/);
+  console.log('PASS: visible SIS table fallback activates the button when the API response was missed');
 
   console.log(`Browser integration checks passed. Screenshots: ${output}`);
 } finally { await context.close(); }

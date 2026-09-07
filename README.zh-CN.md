@@ -163,7 +163,7 @@ npm run package
 | `scripts/browser-test.mjs` | 在模拟 PDC、SIS 及日历响应下测试真实扩展 |
 | `scripts/package.py` | 生成根目录包含 `manifest.json` 的 ZIP 安装包 |
 
-v0.3.0 已通过 **20 项单元测试和 13 项浏览器集成检查**。自动化测试不会写入真实学生日历。测试范围及仍需实测的项目见 [VALIDATION.md](VALIDATION.md)。
+v0.3.1 已通过 **20 项单元测试和 14 项浏览器集成检查**。自动化测试不会写入真实学生日历。测试范围及仍需实测的项目见 [VALIDATION.md](VALIDATION.md)。
 
 ## 许可证与参考资料
 

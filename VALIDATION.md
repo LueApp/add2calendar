@@ -1,11 +1,11 @@
 # Validation — 2026-09-07
 
-Version: **0.3.0**. Runtime: no dependencies or build step. Minimum Chrome version: 120.
+Version: **0.3.1**. Runtime: no dependencies or build step. Minimum Chrome version: 120.
 
 ## Completed
 
 - **20 unit tests passed** with Node.js 24.15.0. Covered China-to-UTC conversion, recurring weekday expansion, missing/invalid schedules, stable identifiers, conflicting venues, Unicode iCalendar escaping and 75-octet folding, session selection, Outlook/Google URL parameters, valid Nextcloud URLs, conditional CalDAV writes, partial failures, retries, UTF-8 authentication, SIS enrolled/waitlisted filtering, and SIS recurring meeting conversion.
-- **13 browser integration checks passed** with the actual extension loaded in an isolated **Chrome for Testing 153.0.8010.12** profile via Playwright 1.63.0. PDC, SIS, and Nextcloud responses were synthetic; the browser timezone was America/New_York.
+- **14 browser integration checks passed** with the actual extension loaded in an isolated **Chrome for Testing 153.0.8010.12** profile via Playwright 1.63.0. PDC, SIS, and Nextcloud responses were synthetic; the browser timezone was America/New_York.
 - Verified buttons only appear for enrolled rows, ignore remark rows, appear after a new enrollment, and disappear after a drop.
 - Verified paginated enrollment reads and fresh data lookup on click.
 - Verified the content script, background worker, session draft storage, and preview work together without passing the PDC token or student-profile fields to the preview.
@@ -17,6 +17,7 @@ Version: **0.3.0**. Runtime: no dependencies or build step. Minimum Chrome versi
 - Verified actual preview CalDAV serialization/requests against a mock server, including repeated-click handling. The optional permission decision was mocked for the Nextcloud write check.
 - Verified preferences, hidden saved passwords, invalid Nextcloud URL rejection, forgetting a connection, and expired PDC login feedback.
 - Verified a synthetic SIS schedule response activates **Add class schedule**, excludes a waitlisted class, opens the batch preview, expands recurring meetings, and downloads an `.ics` file with SIS-specific identifiers and source links.
+- Verified the visible SIS table activates the same control and preserves separate recurring patterns, rooms, and instructors when the API response is missed.
 - Confirmed no browser page errors or unexpected network destinations in the final integration run.
 - Reviewed screenshots of the single-session preview, multiple-session preview, and settings page.
 - Checked JavaScript syntax and manifest file references.
