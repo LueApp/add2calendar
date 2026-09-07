@@ -57,7 +57,7 @@ async function add() {
   if (provider !== 'nextcloud') {
     const count = entries.reduce((n, entry) => n + entry.sessions.length, 0);
     const url = URL.createObjectURL(new Blob([makeCalendarICS(entries, reminder)], { type: 'text/calendar;charset=utf-8' }));
-    const link = document.createElement('a'); link.href = url; link.download = `PDC-events-${new Date().toISOString().slice(0, 10)}.ics`; link.click();
+    const link = document.createElement('a'); link.href = url; link.download = `Add2Calendar-events-${new Date().toISOString().slice(0, 10)}.ics`; link.click();
     setTimeout(() => URL.revokeObjectURL(url), 30000);
     status(`File prepared: ${entries.length} event(s), ${count} session(s). Import it into your calendar to finish.`);
     showImportGuide(provider);

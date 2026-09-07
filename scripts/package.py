@@ -4,7 +4,7 @@ import json
 
 root = Path(__file__).resolve().parent.parent
 version = json.loads((root / 'extension' / 'manifest.json').read_text())['version']
-target = root / 'dist' / f'pdc-calendar-{version}.zip'
+target = root / 'dist' / f'add2calendar-{version}.zip'
 target.parent.mkdir(exist_ok=True)
 with ZipFile(target, 'w', ZIP_DEFLATED) as archive:
     for file in sorted((root / 'extension').rglob('*')):

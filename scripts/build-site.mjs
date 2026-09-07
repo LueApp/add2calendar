@@ -5,7 +5,7 @@ import { fileURLToPath } from "node:url";
 const root = dirname(dirname(fileURLToPath(import.meta.url)));
 const output = join(root, "web-dist");
 const manifest = JSON.parse(await readFile(join(root, "extension", "manifest.json"), "utf8"));
-const archiveName = `pdc-calendar-${manifest.version}.zip`;
+const archiveName = `add2calendar-${manifest.version}.zip`;
 
 await rm(output, { recursive: true, force: true });
 await cp(join(root, "site"), output, { recursive: true });

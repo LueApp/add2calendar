@@ -1,10 +1,10 @@
-# PDC · Add to Calendar
+# Add2Calendar
 
 **English** | [简体中文](README.zh-CN.md)
 
-A Chrome extension that adds **Add to calendar** and **Add multiple events** buttons to the [HKUST(GZ) PDC system](https://pdc.hkust-gz.edu.cn/enrollment-records). Add enrolled seminars to Outlook, Google Calendar, Nextcloud, or an `.ics` calendar file.
+**Calendar export for HKUST(GZ).** Add2Calendar is a Chrome extension that brings campus schedules to the calendar you already use. It currently adds **Add to calendar** and **Add multiple events** buttons to the [PDC system](https://pdc.hkust-gz.edu.cn/enrollment-records), letting you export enrolled seminars to Outlook, Google Calendar, Nextcloud, or an `.ics` file.
 
-**[Download v0.2.0](https://github.com/LueApp/pdc-calendar-extension/releases/download/v0.2.0/pdc-calendar-0.2.0.zip)** · [All releases](https://github.com/LueApp/pdc-calendar-extension/releases) · [Report an issue](https://github.com/LueApp/pdc-calendar-extension/issues)
+**[Download the latest release](https://github.com/LueApp/add2calendar/releases/latest)** · [All releases](https://github.com/LueApp/add2calendar/releases) · [Report an issue](https://github.com/LueApp/add2calendar/issues)
 
 ## Website
 
@@ -35,7 +35,7 @@ The deployable site is written to `web-dist/` and includes the current extension
 
 Requires **Google Chrome 120+**. No Node.js, Python, or server is needed for normal use.
 
-1. Download **`pdc-calendar-0.2.0.zip`** from [Releases](https://github.com/LueApp/pdc-calendar-extension/releases/latest) and extract it into a permanent folder.
+1. Download the extension ZIP from [Releases](https://github.com/LueApp/add2calendar/releases/latest) and extract it into a permanent folder.
 2. Open `chrome://extensions` in Chrome and enable **Developer mode**.
 3. Click **Load unpacked**. Select the folder that **directly contains `manifest.json`**.
 4. Reload PDC and sign in normally.
@@ -43,7 +43,7 @@ Requires **Google Chrome 120+**. No Node.js, Python, or server is needed for nor
 
 | How you downloaded it | Folder to select in Chrome |
 | --- | --- |
-| Release asset `pdc-calendar-0.2.0.zip` | The extracted folder; `manifest.json` is at its root |
+| Release asset (`.zip`) | The extracted folder; `manifest.json` is at its root |
 | GitHub **Code → Download ZIP**, or `git clone` | The `extension` subfolder inside the source checkout |
 
 **“Manifest file is missing or unreadable”** means Chrome cannot find `manifest.json` directly inside the selected folder. Do not select the ZIP itself or a parent folder. Early v0.1.0 ZIPs used an extra `extension` subfolder.
@@ -81,7 +81,7 @@ Each person uses their own account. Outlook and Google sign-in happens on their 
    https://cloud.example.com/remote.php/dav/calendars/USERNAME/CALENDAR/
    ```
 
-3. In Nextcloud **Settings → Security**, create an app password named **PDC Calendar**.
+3. In Nextcloud **Settings → Security**, create an app password named **Add2Calendar**.
 4. Open the extension’s **Settings** from its toolbar icon or preview. Enter the private calendar URL, Nextcloud username, and app password.
 5. Click **Save Nextcloud connection** and allow Chrome access to that server.
 6. In an event or batch preview, choose **Nextcloud**, select sessions, and click Add.
@@ -129,8 +129,8 @@ When reporting an issue, include the extension version and error text. Remove to
 The extension has no runtime dependencies or build step. Development uses **Node.js 22+**, **npm**, and **Python 3**. Playwright is used only for browser tests.
 
 ```sh
-git clone https://github.com/LueApp/pdc-calendar-extension.git
-cd pdc-calendar-extension
+git clone https://github.com/LueApp/add2calendar.git
+cd add2calendar
 npm ci
 npm test
 npx playwright install chromium

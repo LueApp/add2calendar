@@ -1,13 +1,13 @@
 {
   "manifest_version": 3,
-  "name": "PDC · Add to Calendar",
+  "name": "Add2Calendar · HKUST(GZ)",
   "version": "0.2.0",
-  "description": "Add enrolled HKUST(GZ) PDC events to Nextcloud, Outlook, Google Calendar, or an iCalendar file.",
+  "description": "Bring enrolled HKUST(GZ) events to Outlook, Google Calendar, Nextcloud, or an iCalendar file.",
   "minimum_chrome_version": "120",
   "permissions": ["storage"],
   "optional_host_permissions": ["https://*/*"],
   "background": { "service_worker": "background.js", "type": "module" },
-  "action": { "default_title": "PDC Calendar settings" },
+  "action": { "default_title": "Add2Calendar settings" },
   "options_page": "options.html",
   "content_scripts": [{
     "matches": ["https://pdc.hkust-gz.edu.cn/*"],

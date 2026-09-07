@@ -1,10 +1,10 @@
-# PDC · 添加到日历
+# Add2Calendar
 
 [English](README.md) | **简体中文**
 
-这是一个用于[香港科技大学（广州）PDC 系统](https://pdc.hkust-gz.edu.cn/enrollment-records)的 Chrome 扩展。它提供 **Add to calendar（添加到日历）** 和 **Add multiple events（批量添加活动）** 按钮，将已报名的讲座、研讨会等活动加入 Outlook、Google 日历、Nextcloud，或导出为 `.ics` 日历文件。
+**香港科技大学（广州）的日历导出工具。** Add2Calendar 是一个 Chrome 扩展，帮助你把校园安排放进日常使用的日历。目前它会在 [PDC 系统](https://pdc.hkust-gz.edu.cn/enrollment-records)中添加 **Add to calendar（添加到日历）** 和 **Add multiple events（批量添加活动）** 按钮，将已报名的讲座、研讨会等活动加入 Outlook、Google 日历、Nextcloud，或导出为 `.ics` 文件。
 
-**[下载 v0.2.0](https://github.com/LueApp/pdc-calendar-extension/releases/download/v0.2.0/pdc-calendar-0.2.0.zip)** · [全部版本](https://github.com/LueApp/pdc-calendar-extension/releases) · [反馈问题](https://github.com/LueApp/pdc-calendar-extension/issues)
+**[下载最新版本](https://github.com/LueApp/add2calendar/releases/latest)** · [全部版本](https://github.com/LueApp/add2calendar/releases) · [反馈问题](https://github.com/LueApp/add2calendar/issues)
 
 ## 项目网站
 
@@ -35,7 +35,7 @@ npm run site:build
 
 需要 **Google Chrome 120 或更新版本**。普通使用者不需要安装 Node.js、Python，也不需要部署服务器。
 
-1. 从 [Releases 发布页面](https://github.com/LueApp/pdc-calendar-extension/releases/latest)下载 **`pdc-calendar-0.2.0.zip`**，解压到一个以后不会随意移动的文件夹。
+1. 从 [Releases 发布页面](https://github.com/LueApp/add2calendar/releases/latest)下载扩展 ZIP，解压到一个以后不会随意移动的文件夹。
 2. 在 Chrome 地址栏打开 `chrome://extensions`，开启右上角的**开发者模式**。
 3. 点击**加载已解压的扩展程序**，选择**直接包含 `manifest.json` 的文件夹**。
 4. 刷新 PDC 标签页，并正常登录。
@@ -43,7 +43,7 @@ npm run site:build
 
 | 下载方式 | 在 Chrome 中应选择的目录 |
 | --- | --- |
-| Release 附件 `pdc-calendar-0.2.0.zip` | 解压后的文件夹，其根目录直接包含 `manifest.json` |
+| Release 附件（`.zip`） | 解压后的文件夹，其根目录直接包含 `manifest.json` |
 | GitHub 的 **Code → Download ZIP**，或 `git clone` | 源码目录内的 `extension` 子文件夹 |
 
 **“清单文件缺失或不可读取”**表示 Chrome 无法在所选目录中直接找到 `manifest.json`。不要选择 ZIP 文件本身，也不要选择它的上一级目录。早期 v0.1.0 压缩包多包含了一层 `extension` 子文件夹。
@@ -81,7 +81,7 @@ npm run site:build
    https://cloud.example.com/remote.php/dav/calendars/USERNAME/CALENDAR/
    ```
 
-3. 在 Nextcloud 的**设置 → 安全**中创建名为 **PDC Calendar** 的应用密码。
+3. 在 Nextcloud 的**设置 → 安全**中创建名为 **Add2Calendar** 的应用密码。
 4. 通过扩展工具栏图标或预览中的 **Settings（设置）** 打开配置页，填写日历私有链接、Nextcloud 用户名和应用密码。
 5. 点击 **Save Nextcloud connection（保存 Nextcloud 连接）**，并允许 Chrome 访问所填写的服务器。
 6. 在单个活动或批量预览中选择 **Nextcloud**，勾选场次并点击添加按钮。
@@ -129,8 +129,8 @@ npm run site:build
 扩展本身没有运行时依赖，也不需要构建。开发环境需要 **Node.js 22+**、**npm** 和 **Python 3**；Playwright 仅用于浏览器测试。
 
 ```sh
-git clone https://github.com/LueApp/pdc-calendar-extension.git
-cd pdc-calendar-extension
+git clone https://github.com/LueApp/add2calendar.git
+cd add2calendar
 npm ci
 npm test
 npx playwright install chromium

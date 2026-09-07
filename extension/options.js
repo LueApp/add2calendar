@@ -15,7 +15,7 @@ async function load() {
   $('calendar-url').value = saved?.calendarUrl || '';
   $('username').value = saved?.username || '';
   $('app-password').value = '';
-  $('password-help').textContent = saved?.appPassword ? 'An app password is saved. Leave blank to keep it for this same server and username.' : 'Use a separate app password for PDC Calendar.';
+  $('password-help').textContent = saved?.appPassword ? 'An app password is saved. Leave blank to keep it for this same server and username.' : 'Use a separate app password for Add2Calendar.';
   $('disconnect').disabled = !saved;
 }
 

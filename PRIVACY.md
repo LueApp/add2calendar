@@ -2,7 +2,7 @@
 
 **English** | [简体中文](PRIVACY.zh-CN.md)
 
-PDC Calendar runs locally in your browser. The author operates no backend and receives no data. There is no analytics or telemetry.
+Add2Calendar runs locally in your browser. The author operates no backend and receives no data. There is no analytics or telemetry.
 
 ## PDC access
 

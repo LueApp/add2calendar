@@ -100,7 +100,7 @@ export function makeICS(event, sessions = event.sessions, reminder = 15, now = n
 export function makeCalendarICS(entries, reminder = 15, now = new Date()) {
   if (!entries.some(entry => entry.sessions.length)) throw new Error('Select at least one session.');
   if (![0, 5, 15, 30, 60, 1440].includes(Number(reminder))) throw new Error('Invalid reminder.');
-  const lines = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//PDC Calendar Extension//EN', 'CALSCALE:GREGORIAN'];
+  const lines = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//Add2Calendar//EN', 'CALSCALE:GREGORIAN'];
   const seen = new Set();
   for (const { event, sessions } of entries) {
   for (const session of sessions) {
