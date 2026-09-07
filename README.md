@@ -22,6 +22,7 @@ The deployable site is written to `web-dist/` and includes the current extension
 - Batch export across **all enrollment pages**, with event and session selection.
 - An **Add class schedule** control on SIS **My Class Schedule**, exporting enrolled classes while excluding waitlisted and dropped classes.
 - Each event retains its title, dates, times, venue, instructors, and source link.
+- SIS titles include the class section. If one meeting time lists several venues, the preview lets you choose one or keep the venues combined.
 - Multiple sessions and weekly meeting schedules are supported.
 - PDC and SIS times are interpreted in **China Standard Time, UTC+08:00**, regardless of your computer timezone.
 - Uses your existing PDC or SIS session; complete university authentication normally.
@@ -53,8 +54,8 @@ Requires **Google Chrome 120+**. No Node.js, Python, or server is needed for nor
 
 1. Sign into SIS and open **Classes → My Class Schedule**.
 2. Wait for **Add class schedule** in the lower-right corner. Its status shows how many enrolled classes are ready.
-3. Click the button to preview every enrolled class and recurring meeting. Waitlisted and dropped classes are excluded.
-4. Choose a calendar destination, adjust the selected classes or sessions, then add or download the batch.
+3. Click the button to preview every enrolled class and recurring meeting. Waitlisted and dropped classes are excluded. Classes are labeled with their section, such as `SYSH 5000 · T01`.
+4. Choose a calendar destination, adjust the selected classes or sessions, and resolve any multiple-venue warnings by choosing one room or keeping the rooms combined. Then add or download the batch.
 
 Add2Calendar observes the schedule response that SIS already loads for this page. It keeps course code, title, section, dates, weekdays, times, rooms, and instructor names; student identifiers and authentication data are not passed to the extension preview. If the control still says **Loading class schedule…**, reload the extension and then reload the SIS page.
 
@@ -163,7 +164,7 @@ The ZIP is written to `dist/`. To load the source directly, select `extension/` 
 | `scripts/browser-test.mjs` | Actual extension tested against simulated PDC, SIS, and calendar responses |
 | `scripts/package.py` | Creates the ZIP with `manifest.json` at its root |
 
-Version 0.3.1 passed **20 unit tests and 14 browser integration checks**. Automated tests do not write to real student calendars. See [VALIDATION.md](VALIDATION.md) for test scope and live checks still needed.
+Version 0.3.2 passed **20 unit tests and 14 browser integration checks**. Automated tests do not write to real student calendars. See [VALIDATION.md](VALIDATION.md) for test scope and live checks still needed.
 
 ## License and references
 

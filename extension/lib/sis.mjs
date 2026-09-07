@@ -31,7 +31,7 @@ export function sisCourseToEvent(course) {
     .map(instructor => cleanText(instructor?.instructorName, 200)).filter(Boolean))];
   return {
     activityEventCode: `SIS-${classId}`,
-    description: [code, title].filter(Boolean).join(' · '),
+    description: [code, section, title].filter(Boolean).join(' · '),
     eventInstructors: instructors.map(name => ({ name })),
     remarks: [`Class section: ${section || 'not specified'}`, classNumber && `Class number: ${classNumber}`].filter(Boolean).join('\n'),
     sourceName: 'SIS',

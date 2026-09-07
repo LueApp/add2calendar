@@ -28,7 +28,7 @@ const sisCourse = {
   meetingInfoList: [{ startDate: '2026-09-07', endDate: '2026-09-18', weekDay: '1,3', meetingStartTime: '10:00', meetingEndTime: '11:30', facilityName: 'Synthetic Room 101', instructorList: [{ instructorName: 'Dr. Example', instructorRoleInd: 'PI' }] }]
 };
 const sisHtml = `<!doctype html><html><head><title>SIS test fixture</title></head><body><main><h1>My Class Schedule</h1></main><script>fetch('/api/student/queryMyClassSchedulePage',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({synthetic:true})});</script></body></html>`;
-const sisDomHtml = `<!doctype html><html><head><title>SIS DOM fixture</title></head><body><div class="el-table"><div class="el-table__header-wrapper"><table><thead><tr><th></th><th>Course</th><th>Section</th><th>Description</th><th>Status</th><th>Waitlist Position</th><th>Waitlist Message</th><th>Credit(s)</th><th>Date &amp; Time</th><th>Location</th><th>Instructor</th></tr></thead></table></div><div class="el-table__body-wrapper"><table><tbody><tr><td></td><td>COMP 5001</td><td>L1 (1234)</td><td>Synthetic Systems Seminar</td><td>Enrolled</td><td>-</td><td>-</td><td>3</td><td><div class="column-row">01-SEP-2026 - 07-DEC-2026 Mo 10:00AM - 11:30AM</div><div class="column-row">01-SEP-2026 - 07-DEC-2026 We 10:00AM - 11:30AM</div></td><td><div class="column-row">Synthetic Room 101</div><div class="column-row">Synthetic Room 202</div></td><td><div class="column-row">Dr. Example</div><div class="column-row">Dr. Example</div></td></tr></tbody></table></div></div></body></html>`;
+const sisDomHtml = `<!doctype html><html><head><title>SIS DOM fixture</title></head><body><div class="el-table"><div class="el-table__header-wrapper"><table><thead><tr><th></th><th>Course</th><th>Section</th><th>Description</th><th>Status</th><th>Waitlist Position</th><th>Waitlist Message</th><th>Credit(s)</th><th>Date &amp; Time</th><th>Location</th><th>Instructor</th></tr></thead></table></div><div class="el-table__body-wrapper"><table><tbody><tr><td></td><td>COMP 5001</td><td>L1 (1234)</td><td>Synthetic Systems Seminar</td><td>Enrolled</td><td>-</td><td>-</td><td>3</td><td><div class="column-row">01-SEP-2026 - 07-DEC-2026 Mo 10:00AM - 11:30AM</div><div class="column-row">01-SEP-2026 - 07-DEC-2026 We 10:00AM - 11:30AM</div><div class="column-row">01-SEP-2026 - 07-DEC-2026 Mo 10:00AM - 11:30AM</div></td><td><div class="column-row">Synthetic Room 101</div><div class="column-row">Synthetic Room 202</div><div class="column-row">Synthetic Room 303</div></td><td><div class="column-row">Dr. Example</div><div class="column-row">Dr. Example</div><div class="column-row">Dr. Example</div></td></tr></tbody></table></div></div></body></html>`;
 
 await context.route('https://**/*', async route => {
   const request = route.request(), url = new URL(request.url());
@@ -257,7 +257,7 @@ try {
   await sisBatch.locator('#content:not([hidden])').waitFor();
   assert.equal(await sisBatch.locator('.batch-event').count(), 1);
   assert.equal(await sisBatch.locator('.session').count(), 4);
-  assert.match(await sisBatch.locator('.batch-event').textContent(), /COMP 5001 · Synthetic Systems Seminar/);
+  assert.match(await sisBatch.locator('.batch-event').textContent(), /COMP 5001 · L1 · Synthetic Systems Seminar/);
   const sisDownloadPromise = sisBatch.waitForEvent('download');
   await sisBatch.locator('#add').click();
   const sisDownload = await sisDownloadPromise;
@@ -277,8 +277,18 @@ try {
   await sisDomBatch.locator('#content:not([hidden])').waitFor();
   assert.equal(await sisDomBatch.locator('.batch-event').count(), 1);
   assert.equal(await sisDomBatch.locator('.session').count(), 28);
+  assert.equal(await sisDomBatch.locator('.venue-choice select').count(), 14);
+  await sisDomBatch.locator('.venue-choice select').first().selectOption('Synthetic Room 303');
   assert.match(await sisDomBatch.locator('.batch-event').textContent(), /Synthetic Room 101/);
   assert.match(await sisDomBatch.locator('.batch-event').textContent(), /Synthetic Room 202/);
+  assert.match(await sisDomBatch.locator('.batch-event').textContent(), /Synthetic Room 303/);
+  await sisDomBatch.locator('#select-all').click();
+  const sisDomDownloadPromise = sisDomBatch.waitForEvent('download');
+  await sisDomBatch.locator('#add').click();
+  const sisDomDownload = await sisDomDownloadPromise;
+  await sisDomDownload.saveAs(path.join(output, 'sis-dom-venue.ics'));
+  const sisDomText = (await readFile(path.join(output, 'sis-dom-venue.ics'), 'utf8')).replace(/\r\n /g, '');
+  assert.match(sisDomText, /LOCATION:Synthetic Room 303/);
   console.log('PASS: visible SIS table fallback activates the button when the API response was missed');
 
   console.log(`Browser integration checks passed. Screenshots: ${output}`);

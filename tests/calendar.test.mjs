@@ -37,8 +37,11 @@ test('duplicates collapse and IDs survive reordering and title changes', async (
   assert.deepEqual(first.sessions, second.sessions);
 });
 
-test('conflicting venues at the same time are rejected', async () => {
-  await assert.rejects(normalizeEvent({ ...seminar, eventSchedules: [...seminar.eventSchedules, { ...seminar.eventSchedules[0], venue: 'Different room' }] }), /venues/);
+test('conflicting venues at the same time become user-selectable options', async () => {
+  const event = await normalizeEvent({ ...seminar, eventSchedules: [...seminar.eventSchedules, { ...seminar.eventSchedules[0], venue: 'Different room' }] });
+  assert.equal(event.sessions.length, 1);
+  assert.deepEqual(event.sessions[0].locationOptions, ['Academic Building, Room 101', 'Different room']);
+  assert.equal(event.sessions[0].location, 'Academic Building, Room 101 / Different room');
 });
 
 test('iCalendar escapes injected properties and folds Unicode at 75 octets with CRLF', async () => {

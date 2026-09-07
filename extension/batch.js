@@ -10,6 +10,20 @@ const sessionBoxes = new Map(), eventBoxes = new Map();
 const selected = () => events.map(event => ({ event, sessions: event.sessions.filter(session => sessionBoxes.get(session.uid).checked) })).filter(entry => entry.sessions.length);
 function status(message, error = false) { $('status').textContent = message; $('status').className = error ? 'error' : ''; $('status').hidden = !message; }
 
+function venueChoice(session, id) {
+  if (!Array.isArray(session.locationOptions) || session.locationOptions.length < 2) return null;
+  const wrap = document.createElement('div'); wrap.className = 'venue-choice';
+  const warning = document.createElement('strong'); warning.textContent = 'Multiple venues listed for this time';
+  const select = document.createElement('select'); select.id = id; select.setAttribute('aria-label', 'Choose venue');
+  const combined = session.locationOptions.join(' / ');
+  select.append(new Option(`Combine venues · ${combined}`, combined));
+  for (const location of session.locationOptions) select.append(new Option(location, location));
+  select.value = combined;
+  select.addEventListener('change', () => { session.location = select.value; });
+  wrap.append(warning, select);
+  return wrap;
+}
+
 function update() {
   const entries = selected(), count = entries.reduce((total, entry) => total + entry.sessions.length, 0);
   const provider = $('provider').value;
@@ -115,8 +129,10 @@ async function init() {
       const sessionLabel = document.createElement('label'); sessionLabel.htmlFor = input.id;
       const date = document.createElement('strong'); date.textContent = dateFormat.format(new Date(session.start));
       const time = document.createElement('span'); time.textContent = `${timeFormat.format(new Date(session.start))} – ${timeFormat.format(new Date(session.end))}`;
-      const venue = document.createElement('small'); venue.textContent = session.location || 'Venue not yet specified';
-      sessionLabel.append(date, time, venue); row.append(input, sessionLabel); section.append(row);
+      const venue = document.createElement('small'); venue.textContent = session.locationOptions?.length > 1 ? 'Choose one venue or keep them combined.' : session.location || 'Venue not yet specified';
+      sessionLabel.append(date, time, venue); row.append(input, sessionLabel);
+      const choice = venueChoice(session, `venue-${index}-${sessionIndex}`); if (choice) row.append(choice);
+      section.append(row);
       input.addEventListener('change', update);
     }
     $('events').append(section);

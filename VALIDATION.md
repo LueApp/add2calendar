@@ -1,6 +1,6 @@
 # Validation — 2026-09-07
 
-Version: **0.3.1**. Runtime: no dependencies or build step. Minimum Chrome version: 120.
+Version: **0.3.2**. Runtime: no dependencies or build step. Minimum Chrome version: 120.
 
 ## Completed
 
@@ -17,7 +17,7 @@ Version: **0.3.1**. Runtime: no dependencies or build step. Minimum Chrome versi
 - Verified actual preview CalDAV serialization/requests against a mock server, including repeated-click handling. The optional permission decision was mocked for the Nextcloud write check.
 - Verified preferences, hidden saved passwords, invalid Nextcloud URL rejection, forgetting a connection, and expired PDC login feedback.
 - Verified a synthetic SIS schedule response activates **Add class schedule**, excludes a waitlisted class, opens the batch preview, expands recurring meetings, and downloads an `.ics` file with SIS-specific identifiers and source links.
-- Verified the visible SIS table activates the same control and preserves separate recurring patterns, rooms, and instructors when the API response is missed.
+- Verified the visible SIS table activates the same control when the API response is missed. Class sections distinguish titles; same-time venue conflicts remain exportable through per-session single/combined venue choices, and the chosen venue reaches the `.ics` file.
 - Confirmed no browser page errors or unexpected network destinations in the final integration run.
 - Reviewed screenshots of the single-session preview, multiple-session preview, and settings page.
 - Checked JavaScript syntax and manifest file references.

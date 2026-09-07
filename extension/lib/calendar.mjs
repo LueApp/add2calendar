@@ -44,7 +44,7 @@ export async function normalizeEvent(raw) {
   if (!code || !title) throw new Error('The event code or title is missing.');
   if (!Array.isArray(raw.eventSchedules) || !raw.eventSchedules.length || raw.eventSchedules.length > 200)
     throw new Error(`This ${sourceName} entry has no usable schedule yet. Try again after the source publishes it.`);
-  const sessions = [], seen = new Set();
+  const sessions = [], seen = new Map();
   for (const schedule of raw.eventSchedules) {
     const first = dayValue(schedule.dateBegin, sourceName), last = schedule.dateEnd ? dayValue(schedule.dateEnd, sourceName) : first;
     if (last < first || last - first > 732 * DAY) throw new Error(`The event date range needs to be checked in ${sourceName}.`);
@@ -60,12 +60,15 @@ export async function normalizeEvent(raw) {
       const identity = `${start}/${end}`;
       const location = cleanText(schedule.venue, 1000);
       if (seen.has(identity)) {
-        if (sessions.find(s => `${s.start}/${s.end}` === identity)?.location !== location)
-          throw new Error('PDC lists different venues for the same session. Check the event before adding it.');
+        const existing = seen.get(identity);
+        const locations = [...new Set([...(existing.locationOptions || [existing.location]), location].filter(Boolean))];
+        existing.location = locations.join(' / ');
+        if (locations.length > 1) existing.locationOptions = locations;
         continue;
       }
-      seen.add(identity);
-      sessions.push({ uid: await uidFor(code, start, end, uidNamespace), start, end, location });
+      const session = { uid: await uidFor(code, start, end, uidNamespace), start, end, location };
+      seen.set(identity, session);
+      sessions.push(session);
       if (sessions.length > 500) throw new Error('This event has too many sessions to export at once.');
     }
   }

@@ -28,6 +28,7 @@ test('SIS enrolled classes become recurring China-time calendar events', async (
   assert.equal(isEnrolledCourse({ ...enrolled, enrollmentStatus: 'waitlistSuccess' }), false);
   const raw = sisCourseToEvent(enrolled);
   assert.equal(raw.activityEventCode, 'SIS-CLASS-101');
+  assert.equal(raw.description, 'COMP 5001 · L1 · Synthetic Systems Seminar');
   assert.equal(raw.eventSchedules[0].meetOnMon, true);
   assert.equal(raw.eventSchedules[0].meetOnWed, true);
   const result = await normalizeSisBatch([enrolled, { ...enrolled, classId: 'WAIT', enrollmentStatus: 'waitlistSuccess' }]);

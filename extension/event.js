@@ -9,6 +9,20 @@ const selected = () => event.sessions.filter((_, i) => $(`session-${i}`).checked
 
 function status(text, error = false) { $('status').textContent = text; $('status').className = error ? 'error' : ''; $('status').hidden = !text; }
 
+function venueChoice(session, id) {
+  if (!Array.isArray(session.locationOptions) || session.locationOptions.length < 2) return null;
+  const wrap = document.createElement('div'); wrap.className = 'venue-choice';
+  const warning = document.createElement('strong'); warning.textContent = 'Multiple venues listed for this time';
+  const select = document.createElement('select'); select.id = id; select.setAttribute('aria-label', 'Choose venue');
+  const combined = session.locationOptions.join(' / ');
+  select.append(new Option(`Combine venues · ${combined}`, combined));
+  for (const location of session.locationOptions) select.append(new Option(location, location));
+  select.value = combined;
+  select.addEventListener('change', () => { session.location = select.value; });
+  wrap.append(warning, select);
+  return wrap;
+}
+
 function renderProvider() {
   const provider = $('provider').value;
   const web = ['google', 'outlook-school', 'outlook-personal'].includes(provider);
@@ -92,12 +106,14 @@ async function init() {
     const label = document.createElement('label'); label.htmlFor = check.id;
     const date = document.createElement('strong'); date.textContent = formatDate.format(new Date(session.start));
     const detail = document.createElement('span'); detail.textContent = `${formatTime.format(new Date(session.start))} – ${formatTime.format(new Date(session.end))}`;
-    const venue = document.createElement('small'); venue.textContent = session.location || 'Venue not yet specified';
+    const venue = document.createElement('small'); venue.textContent = session.locationOptions?.length > 1 ? 'Choose one venue or keep them combined.' : session.location || 'Venue not yet specified';
     label.append(date, detail, venue);
     const link = document.createElement('a'); link.id = `open-${index}`; link.textContent = 'Open this session ↗'; link.target = '_blank'; link.rel = 'noopener noreferrer';
     link.addEventListener('click', () => status('Review and save the event in the calendar tab. Reopening a session may create a duplicate.'));
     check.addEventListener('change', renderProvider);
-    row.append(check, label, link); $('sessions').append(row);
+    row.append(check, label);
+    const choice = venueChoice(session, `venue-${index}`); if (choice) row.append(choice);
+    row.append(link); $('sessions').append(row);
   }
   $('provider').addEventListener('change', () => { $('outlook-import').hidden = true; renderProvider(); preferences().catch(error => status(error.message, true)); });
   $('reminder').addEventListener('change', () => preferences().catch(error => status(error.message, true)));
