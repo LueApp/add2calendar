@@ -39,7 +39,7 @@ function download() {
     const url = URL.createObjectURL(new Blob([makeICS(event, sessions, Number($('reminder').value))], { type: 'text/calendar;charset=utf-8' }));
     const link = document.createElement('a');
     link.href = url;
-    link.download = `PDC-${event.code.replace(/[^a-zA-Z0-9_-]/g, '_').slice(0, 100)}.ics`;
+    link.download = `${event.sourceName || 'Add2Calendar'}-${event.code.replace(/[^a-zA-Z0-9_-]/g, '_').slice(0, 100)}.ics`;
     link.click();
     setTimeout(() => URL.revokeObjectURL(url), 30000);
     status(`Calendar file prepared for ${sessions.length} session(s). Import it into your calendar to finish. Repeated imports may create duplicates.`);
@@ -77,13 +77,13 @@ async function add() {
 async function init() {
   const id = new URLSearchParams(location.search).get('id');
   const draft = (await chrome.storage.session.get(`draft:${id}`))[`draft:${id}`];
-  if (!draft || Date.now() - draft.created > 86400000) throw new Error('This preview has expired. Return to PDC and click Add to calendar again.');
+  if (!draft || Date.now() - draft.created > 86400000) throw new Error('This preview has expired. Return to the source page and click Add to calendar again.');
   event = draft.event;
   const { preferences: prefs } = await chrome.storage.local.get('preferences');
   if (prefs && [...$('provider').options].some(option => option.value === prefs.provider)) $('provider').value = prefs.provider;
   if (prefs && [...$('reminder').options].some(option => option.value === String(prefs.reminder))) $('reminder').value = String(prefs.reminder);
   $('title').textContent = event.title;
-  $('subtitle').textContent = `PDC event ${event.code}`;
+  $('subtitle').textContent = `${event.sourceName || 'Calendar'} event ${event.code}`;
   $('count').textContent = String(event.sessions.length);
   $('description').textContent = event.description;
   for (const [index, session] of event.sessions.entries()) {

@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#f7f4ee" />
-    <meta name="description" content="Add2Calendar 是香港科技大学（广州）的日历导出扩展，目前支持已报名的 PDC 活动。" />
+    <meta name="description" content="将香港科技大学（广州）PDC 活动和 SIS 课程表导出到 Outlook、Google 日历、Nextcloud 或 iCalendar。" />
     <title>Add2Calendar · 香港科技大学（广州）</title>
     <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml" />
     <link rel="stylesheet" href="/assets/site.css" />
@@ -35,15 +35,15 @@
         <div class="hero-copy">
           <p class="eyebrow"><span></span> 香港科技大学（广州）日历导出工具</p>
           <h1 id="hero-title">把校园活动放进你每天都会看的日历。</h1>
-          <p class="hero-lede">把已报名的讲座添加到 Outlook、Google 日历、Nextcloud 或 <code>.ics</code> 文件——单个添加或批量导出都可以。</p>
+          <p class="hero-lede">把 PDC 讲座和 SIS 周期性课程表导出到 Outlook、Google 日历、Nextcloud 或 <code>.ics</code> 文件。</p>
           <div class="hero-actions">
-            <a class="button button-primary" href="/downloads/add2calendar-0.2.0.zip" download>
+            <a class="button button-primary" href="/downloads/add2calendar-0.3.0.zip" download>
               <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m0 0 5-5m-5 5-5-5M5 21h14" /></svg>
-              下载 v0.2.0
+              下载 v0.3.0
             </a>
             <a class="button button-secondary" href="https://github.com/LueApp/add2calendar" target="_blank" rel="noopener noreferrer">在 GitHub 查看 <span aria-hidden="true">↗</span></a>
           </div>
-          <ul class="hero-facts" aria-label="运行要求和项目信息"><li>Chrome 120+</li><li>无需注册账号</li><li>MIT 开源许可</li></ul>
+          <ul class="hero-facts" aria-label="运行要求和项目信息"><li>PDC + SIS</li><li>无需注册账号</li><li>MIT 开源许可</li></ul>
         </div>
 
         <div class="hero-visual" aria-label="将 PDC 活动添加到日历的界面预览">
@@ -61,7 +61,7 @@
       </section>
 
       <section class="quick-features" aria-label="主要特点">
-        <article><span class="feature-number">01</span><div><h2>单个或批量</h2><p>添加单个场次，或跨所有报名分页选择多个活动。</p></div></article>
+        <article><span class="feature-number">01</span><div><h2>活动和课程</h2><p>添加单个 PDC 场次，或批量导出 SIS 周期性课程表。</p></div></article>
         <article><span class="feature-number">02</span><div><h2>选择你的日历</h2><p>支持 Outlook、Google 日历、Nextcloud、Apple 日历等。</p></div></article>
         <article><span class="feature-number">03</span><div><h2>隐私优先</h2><p>没有数据统计或后端。PDC 令牌只在扩展与 PDC 之间使用。</p></div></article>
       </section>
@@ -71,16 +71,16 @@
         <ol class="steps">
           <li><span class="step-index">01</span><div><h3>下载并解压</h3><p>下载上方 ZIP 文件，将其解压到一个以后不会随意移动的文件夹。</p></div></li>
           <li><span class="step-index">02</span><div><h3>加载扩展</h3><p>打开 <code>chrome://extensions</code>，开启<strong>开发者模式</strong>，点击<strong>加载已解压的扩展程序</strong>。选择根目录中直接包含 <code>manifest.json</code> 的文件夹。</p></div></li>
-          <li><span class="step-index">03</span><div><h3>打开 PDC</h3><p>正常登录 PDC，进入 <strong>Event Enrollment</strong> 或 <strong>Enrollment Records</strong>，使用已报名活动旁新增的日历按钮。</p></div></li>
+          <li><span class="step-index">03</span><div><h3>打开 PDC 或 SIS</h3><p>使用 PDC 报名页面上的日历按钮，或 SIS <strong>My Class Schedule</strong> 页面上的 <strong>Add class schedule</strong>。</p></div></li>
         </ol>
       </section>
 
       <section class="preview-section section" aria-labelledby="preview-title">
-        <div class="preview-frame"><img src="/assets/batch-preview.png" alt="批量活动预览，显示两个虚构研讨会和 Outlook 导入选项" loading="lazy" width="1200" height="1654" /></div>
+        <div class="preview-frame"><img src="/assets/batch-preview.png" alt="批量活动预览，显示两个虚构研讨会和 Outlook 导入选项" loading="lazy" width="1200" height="1903" /></div>
         <div class="preview-copy">
           <p class="eyebrow"><span></span> 批量导出</p><h2 id="preview-title">把一周的活动都带走。</h2>
-          <p>选择需要的活动和场次，再生成一个整洁的日历文件。每个活动会保留自己的名称、时间、地点、讲者和 PDC 来源链接。</p>
-          <ul class="check-list"><li><span>✓</span> 读取所有报名分页</li><li><span>✓</span> 支持一个活动包含多个场次</li><li><span>✓</span> 使用中国标准时间（UTC+08:00）</li></ul>
+          <p>选择需要的活动、课程和场次，再生成一个整洁的日历文件。每条日程都会保留名称、时间、地点、讲者和来源链接。</p>
+          <ul class="check-list"><li><span>✓</span> 读取所有 PDC 报名分页</li><li><span>✓</span> 导出 SIS 已选课程</li><li><span>✓</span> 使用中国标准时间（UTC+08:00）</li></ul>
           <p class="caption">预览使用虚构活动数据。</p>
         </div>
       </section>
@@ -93,13 +93,13 @@
           <article><span class="calendar-icon nextcloud" aria-hidden="true">☁</span><h3>Nextcloud</h3><p>完成可选设置后，通过 CalDAV 直接添加。</p></article>
           <article><span class="calendar-icon ics" aria-hidden="true">.ics</span><h3>其他日历应用</h3><p>可导入 Apple 日历、Thunderbird 等应用。</p></article>
         </div>
-        <aside class="notice"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" /><path d="M12 11v6M12 7.5v.5" /></svg><p><strong>请继续留意 PDC。</strong>导入的活动是副本，后续改期和取消不会自动同步。</p></aside>
+        <aside class="notice"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" /><path d="M12 11v6M12 7.5v.5" /></svg><p><strong>请继续留意 PDC 和 SIS。</strong>导入的日程是副本，后续改期和取消不会自动同步。</p></aside>
       </section>
 
       <section class="download-section" aria-labelledby="download-title">
-        <div><p class="eyebrow light"><span></span> 版本 0.2.0</p><h2 id="download-title">让下一场校园活动出现在你的日历里。</h2><p>免费、开源，为香港科技大学（广州）学生打造。</p></div>
+        <div><p class="eyebrow light"><span></span> 版本 0.3.0</p><h2 id="download-title">让下一场校园活动出现在你的日历里。</h2><p>免费、开源，为香港科技大学（广州）学生打造。</p></div>
         <div class="download-actions">
-          <a class="button button-light" href="/downloads/add2calendar-0.2.0.zip" download><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m0 0 5-5m-5 5-5-5M5 21h14" /></svg>下载扩展</a>
+          <a class="button button-light" href="/downloads/add2calendar-0.3.0.zip" download><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m0 0 5-5m-5 5-5-5M5 21h14" /></svg>下载扩展</a>
           <a href="https://github.com/LueApp/add2calendar/releases" target="_blank" rel="noopener noreferrer">查看全部版本 ↗</a>
         </div>
       </section>

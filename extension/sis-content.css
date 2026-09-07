@@ -1,0 +1,27 @@
+#add2calendar-sis-toolbar {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  z-index: 2147483646;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  border: 1px solid #c8ddd6;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, .96);
+  box-shadow: 0 14px 40px rgba(29, 66, 54, .2);
+  font: 13px/1.4 system-ui, sans-serif;
+  color: #55756b;
+  backdrop-filter: blur(12px);
+}
+
+#add2calendar-sis-toolbar[hidden] { display: none; }
+#add2calendar-sis-toolbar button { border: 1px solid #176b57; border-radius: 9px; padding: 10px 14px; color: white; background: #176b57; font: 600 13px/1.4 system-ui, sans-serif; cursor: pointer; }
+#add2calendar-sis-toolbar button:hover { background: #105443; }
+#add2calendar-sis-toolbar button:focus-visible { outline: 3px solid #78b5a2; outline-offset: 2px; }
+#add2calendar-sis-toolbar button:disabled { opacity: .65; cursor: wait; }
+
+@media (max-width: 640px) {
+  #add2calendar-sis-toolbar { right: 12px; bottom: 12px; left: 12px; justify-content: space-between; }
+}

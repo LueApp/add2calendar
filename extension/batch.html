@@ -12,9 +12,9 @@
     <div id="status" role="status" hidden></div>
     <div id="import-guide" class="import-guide" hidden><strong id="import-title">Import this batch once</strong><p id="import-steps"></p><a id="open-calendar" class="button secondary" target="_blank" rel="noopener noreferrer">Open Outlook ↗</a></div>
     </section>
-    <section class="card"><h2>Your enrolled events</h2><p class="help">Upcoming sessions are selected initially. Uncheck events already in your calendar. All times below are China Standard Time (UTC+08:00).</p>
+    <section class="card"><h2 id="events-title">Your enrolled events</h2><p class="help" id="events-help">Upcoming sessions are selected initially. Uncheck events already in your calendar. All times below are China Standard Time (UTC+08:00).</p>
     <div class="actions"><button type="button" id="select-upcoming" class="secondary">Upcoming only</button><button type="button" id="select-all" class="secondary">Select all</button><button type="button" id="select-none" class="secondary">Clear selection</button></div><div id="events"></div></section>
     <section id="unavailable" class="card" hidden><h2>Events that could not be included</h2><ul id="errors"></ul></section>
-    <p class="footnote">Imported events are copies. Later PDC changes are not synchronized. Repeated Outlook or Google imports may create duplicates.</p>
+    <p class="footnote" id="source-note">Imported events are copies. Later source changes are not synchronized. Repeated Outlook or Google imports may create duplicates.</p>
   </div><p id="fatal" role="alert" hidden></p>
 </main><script type="module" src="batch.js"></script></body></html>

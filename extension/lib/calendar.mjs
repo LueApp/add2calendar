@@ -6,44 +6,51 @@ export function cleanText(value, limit = 12000) {
   return String(value ?? '').replace(/\r\n?/g, '\n').replace(/[\u0000-\u0008\u000b\u000c\u000e-\u001f\u007f]/g, '').slice(0, limit).trim();
 }
 
-function dayValue(value) {
+function dayValue(value, sourceName = 'PDC') {
   const date = String(value ?? '').match(/^(\d{4}-\d{2}-\d{2})(?:$|T| )/)?.[1];
   const ms = Date.parse(`${date}T00:00:00Z`);
   if (!date || !Number.isFinite(ms) || new Date(ms).toISOString().slice(0, 10) !== date)
-    throw new Error('PDC returned an invalid schedule date. Check the event in PDC.');
+    throw new Error(`${sourceName} returned an invalid schedule date. Check the source schedule.`);
   return ms;
 }
 
-function clockMinutes(hour, minute, allowMidnight = false) {
+function clockMinutes(hour, minute, allowMidnight = false, sourceName = 'PDC') {
   if (hour === null || hour === undefined || hour === '' || minute === null || minute === undefined || minute === '')
-    throw new Error('PDC has not supplied a complete start/end time.');
+    throw new Error(`${sourceName} has not supplied a complete start/end time.`);
   const h = Number(hour), m = Number(minute);
   if (!Number.isInteger(h) || !Number.isInteger(m) || h < 0 || m < 0 || m > 59 || h > 23 && !(allowMidnight && h === 24 && m === 0))
-    throw new Error('PDC returned an invalid schedule time.');
+    throw new Error(`${sourceName} returned an invalid schedule time.`);
   return h * 60 + m;
 }
 
 function isYes(value) { return [true, 1, '1', 'Y', 'Yes', 'true'].includes(value); }
 
-async function uidFor(code, start, end) {
+async function uidFor(code, start, end, namespace = 'pdc') {
   const hash = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(JSON.stringify([code, start, end])));
-  return `pdc-${Array.from(new Uint8Array(hash), b => b.toString(16).padStart(2, '0')).join('')}@pdc-calendar.local`;
+  const value = Array.from(new Uint8Array(hash), b => b.toString(16).padStart(2, '0')).join('');
+  return namespace === 'pdc' ? `pdc-${value}@pdc-calendar.local` : `${namespace}-${value}@add2calendar.local`;
 }
 
 export async function normalizeEvent(raw) {
-  if (!raw || typeof raw !== 'object') throw new Error('No PDC event was supplied.');
+  if (!raw || typeof raw !== 'object') throw new Error('No calendar event was supplied.');
+  const sourceName = cleanText(raw.sourceName || 'PDC', 50);
+  const sourceUrl = cleanText(raw.sourceUrl || SOURCE, 1000);
+  const uidNamespace = /^[a-z0-9-]{1,30}$/.test(raw.uidNamespace) ? raw.uidNamespace : 'pdc';
+  let parsedSource;
+  try { parsedSource = new URL(sourceUrl); } catch { throw new Error(`${sourceName} supplied an invalid source URL.`); }
+  if (parsedSource.protocol !== 'https:') throw new Error(`${sourceName} supplied an invalid source URL.`);
   const code = cleanText(raw.activityEventCode, 200);
   const title = cleanText(raw.description || raw.title || raw.eventName, 500);
   if (!code || !title) throw new Error('The event code or title is missing.');
   if (!Array.isArray(raw.eventSchedules) || !raw.eventSchedules.length || raw.eventSchedules.length > 200)
-    throw new Error('This event has no usable schedule yet. Try again after PDC publishes it.');
+    throw new Error(`This ${sourceName} entry has no usable schedule yet. Try again after the source publishes it.`);
   const sessions = [], seen = new Set();
   for (const schedule of raw.eventSchedules) {
-    const first = dayValue(schedule.dateBegin), last = schedule.dateEnd ? dayValue(schedule.dateEnd) : first;
-    if (last < first || last - first > 732 * DAY) throw new Error('The event date range needs to be checked in PDC.');
-    const startMinute = clockMinutes(schedule.hourBegin, schedule.minuteBegin);
-    const endMinute = clockMinutes(schedule.hourEnd, schedule.minuteEnd, true);
-    if (endMinute <= startMinute) throw new Error('The end time is not after the start time. Check this schedule in PDC.');
+    const first = dayValue(schedule.dateBegin, sourceName), last = schedule.dateEnd ? dayValue(schedule.dateEnd, sourceName) : first;
+    if (last < first || last - first > 732 * DAY) throw new Error(`The event date range needs to be checked in ${sourceName}.`);
+    const startMinute = clockMinutes(schedule.hourBegin, schedule.minuteBegin, false, sourceName);
+    const endMinute = clockMinutes(schedule.hourEnd, schedule.minuteEnd, true, sourceName);
+    if (endMinute <= startMinute) throw new Error(`The end time is not after the start time. Check this schedule in ${sourceName}.`);
     const days = WEEKDAYS.map(key => isYes(schedule[key]));
     if (last !== first && !days.some(Boolean)) throw new Error('This event spans several dates without meeting weekdays. Its sessions cannot be inferred safely.');
     for (let date = first; date <= last; date += DAY) {
@@ -58,7 +65,7 @@ export async function normalizeEvent(raw) {
         continue;
       }
       seen.add(identity);
-      sessions.push({ uid: await uidFor(code, start, end), start, end, location });
+      sessions.push({ uid: await uidFor(code, start, end, uidNamespace), start, end, location });
       if (sessions.length > 500) throw new Error('This event has too many sessions to export at once.');
     }
   }
@@ -66,14 +73,14 @@ export async function normalizeEvent(raw) {
   sessions.sort((a, b) => a.start.localeCompare(b.start));
   const instructors = Array.isArray(raw.eventInstructors) ? raw.eventInstructors.map(i => cleanText(i.name, 200)).filter(Boolean).join(', ') : '';
   const description = [
-    `PDC event: ${code}`,
+    `${sourceName} event: ${code}`,
     instructors && `Instructor: ${instructors}`,
     raw.enquiryEmail && `Enquiries: ${cleanText(raw.enquiryEmail, 500)}`,
     cleanText(raw.remarks),
-    `Source: ${SOURCE}`,
-    'Added from PDC. Check PDC for later schedule changes or cancellations.'
+    `Source: ${parsedSource.href}`,
+    `Added from ${sourceName}. Check ${sourceName} for later schedule changes or cancellations.`
   ].filter(Boolean).join('\n\n');
-  return { code, title, description, url: SOURCE, sessions };
+  return { code, title, description, url: parsedSource.href, sourceName, sessions };
 }
 
 export function escapeICS(value) {
@@ -108,7 +115,7 @@ export function makeCalendarICS(entries, reminder = 15, now = new Date()) {
     seen.add(session.uid);
     lines.push('BEGIN:VEVENT', `UID:${session.uid}`, `DTSTAMP:${compactDate(now)}`, `DTSTART:${compactDate(session.start)}`, `DTEND:${compactDate(session.end)}`,
       `SUMMARY:${escapeICS(event.title)}`, `DESCRIPTION:${escapeICS(event.description)}`, `LOCATION:${escapeICS(session.location)}`,
-      `URL:${SOURCE}`, 'STATUS:CONFIRMED', 'TRANSP:OPAQUE');
+      `URL:${escapeICS(event.url || SOURCE)}`, 'STATUS:CONFIRMED', 'TRANSP:OPAQUE');
     if (Number(reminder)) lines.push('BEGIN:VALARM', 'ACTION:DISPLAY', `TRIGGER:-PT${Number(reminder)}M`, `DESCRIPTION:${escapeICS(event.title)}`, 'END:VALARM');
     lines.push('END:VEVENT');
   }

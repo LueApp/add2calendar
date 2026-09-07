@@ -2,7 +2,7 @@
 
 **English** | [简体中文](README.zh-CN.md)
 
-**Calendar export for HKUST(GZ).** Add2Calendar is a Chrome extension that brings campus schedules to the calendar you already use. It currently adds **Add to calendar** and **Add multiple events** buttons to the [PDC system](https://pdc.hkust-gz.edu.cn/enrollment-records), letting you export enrolled seminars to Outlook, Google Calendar, Nextcloud, or an `.ics` file.
+**Calendar export for HKUST(GZ).** Add2Calendar is a Chrome extension that brings campus schedules to the calendar you already use. Export enrolled seminars from [PDC](https://pdc.hkust-gz.edu.cn/enrollment-records) and recurring classes from [SIS](https://sisn.hkust-gz.edu.cn/classes/my-class-schedule) to Outlook, Google Calendar, Nextcloud, or an `.ics` file.
 
 **[Download the latest release](https://github.com/LueApp/add2calendar/releases/latest)** · [All releases](https://github.com/LueApp/add2calendar/releases) · [Report an issue](https://github.com/LueApp/add2calendar/issues)
 
@@ -20,12 +20,13 @@ The deployable site is written to `web-dist/` and includes the current extension
 
 - Calendar buttons on **Event Enrollment** and **Enrollment Records**.
 - Batch export across **all enrollment pages**, with event and session selection.
+- An **Add class schedule** control on SIS **My Class Schedule**, exporting enrolled classes while excluding waitlisted and dropped classes.
 - Each event retains its title, dates, times, venue, instructors, and source link.
 - Multiple sessions and weekly meeting schedules are supported.
-- PDC times are interpreted in **China Standard Time, UTC+08:00**, regardless of your computer timezone.
-- Uses your existing PDC session; complete university two-factor authentication normally.
+- PDC and SIS times are interpreted in **China Standard Time, UTC+08:00**, regardless of your computer timezone.
+- Uses your existing PDC or SIS session; complete university authentication normally.
 
-**Added events are copies. Later PDC changes and cancellations are not automatically synchronized.** This is an independent student tool, not an official university application.
+**Added entries are copies. Later PDC or SIS changes and cancellations are not automatically synchronized.** This is an independent student tool, not an official university application.
 
 <img src="docs/images/batch-preview.png" width="760" alt="Batch preview with two fictional seminars, session checkboxes, and Outlook import instructions">
 
@@ -38,8 +39,8 @@ Requires **Google Chrome 120+**. No Node.js, Python, or server is needed for nor
 1. Download the extension ZIP from [Releases](https://github.com/LueApp/add2calendar/releases/latest) and extract it into a permanent folder.
 2. Open `chrome://extensions` in Chrome and enable **Developer mode**.
 3. Click **Load unpacked**. Select the folder that **directly contains `manifest.json`**.
-4. Reload PDC and sign in normally.
-5. Open **Event Enrollment** or **Enrollment Records**. Calendar buttons appear for enrolled events.
+4. Reload any open PDC and SIS tabs and sign in normally.
+5. On PDC, open **Event Enrollment** or **Enrollment Records**. On SIS, open **Classes → My Class Schedule**.
 
 | How you downloaded it | Folder to select in Chrome |
 | --- | --- |
@@ -47,6 +48,15 @@ Requires **Google Chrome 120+**. No Node.js, Python, or server is needed for nor
 | GitHub **Code → Download ZIP**, or `git clone` | The `extension` subfolder inside the source checkout |
 
 **“Manifest file is missing or unreadable”** means Chrome cannot find `manifest.json` directly inside the selected folder. Do not select the ZIP itself or a parent folder. Early v0.1.0 ZIPs used an extra `extension` subfolder.
+
+## Add your SIS class schedule
+
+1. Sign into SIS and open **Classes → My Class Schedule**.
+2. Wait for **Add class schedule** in the lower-right corner. Its status shows how many enrolled classes are ready.
+3. Click the button to preview every enrolled class and recurring meeting. Waitlisted and dropped classes are excluded.
+4. Choose a calendar destination, adjust the selected classes or sessions, then add or download the batch.
+
+Add2Calendar observes the schedule response that SIS already loads for this page. It keeps course code, title, section, dates, weekdays, times, rooms, and instructor names; student identifiers and authentication data are not passed to the extension preview. If the control still says **Loading class schedule…**, reload the extension and then reload the SIS page.
 
 ## Add a batch to Outlook
 
@@ -59,6 +69,8 @@ Requires **Google Chrome 120+**. No Node.js, Python, or server is needed for nor
 **One import confirmation is required for the whole batch.** Uncheck events already in Outlook: the extension cannot inspect your Outlook calendar, and repeated imports may create duplicates. Events with unusable schedules are listed separately in the preview.
 
 For one event, click its **Add to calendar** button. A single-session Outlook link opens a prefilled event for you to save. Selecting several sessions offers **Download for Outlook** to export them together.
+
+The SIS class-schedule button opens the same batch preview, with one event per enrolled class section and its recurring meetings selected.
 
 ## Supported calendars
 
@@ -95,18 +107,18 @@ Identical sessions previously added by this extension are skipped, and existing 
 1. Download and extract the new release.
 2. Copy its files into the **same folder you originally loaded**, replacing the old extension files.
 3. In `chrome://extensions`, click **Reload** on the extension’s card.
-4. Reload PDC.
+4. Reload PDC and SIS.
 
 Keep the installation folder in place. Reusing its path preserves the unpacked extension’s identity and settings. Updates are manual: this extension has not been published to the Chrome Web Store. Some managed browsers may prohibit unpacked extensions.
 
 ## Privacy and limitations
 
 - No analytics, third-party backend, or AI service.
-- The PDC token is used only for read requests to PDC. It is not sent to calendar providers or saved in extension settings.
-- Nextcloud credentials stay in local extension storage, separate from PDC content scripts and Chrome Sync. The app password is **not additionally encrypted at rest**; use a dedicated, revocable app password.
-- The extension does not enroll in or drop events, or bypass login and two-factor authentication.
-- The supported source is HKUST(GZ) PDC. Changes to its internal website interface may require extension updates.
-- Imported events are not subscriptions. Check PDC for later changes and cancellations.
+- The PDC token is used only for read requests to PDC. The SIS adapter observes the schedule response already loaded by SIS and removes student identifiers before passing class data to the extension.
+- Nextcloud credentials stay in local extension storage, separate from campus content scripts and Chrome Sync. The app password is **not additionally encrypted at rest**; use a dedicated, revocable app password.
+- The extension does not enroll in, drop, or swap events or classes, or bypass university authentication.
+- The supported sources are HKUST(GZ) PDC and SIS. Changes to either website’s internal interface may require extension updates.
+- Imported entries are not subscriptions. Check PDC or SIS for later changes and cancellations.
 
 Read the [privacy details](PRIVACY.md) and [validation notes](VALIDATION.md).
 
@@ -115,6 +127,7 @@ Read the [privacy details](PRIVACY.md) and [validation notes](VALIDATION.md).
 | Problem | What to do |
 | --- | --- |
 | No calendar buttons | Reload the extension and PDC, allow access to the PDC site, and check **Enrollment Records**. Buttons appear for enrolled events only. |
+| SIS control stays on “Loading class schedule…” | Reload the extension, then reload **My Class Schedule** after SIS has finished signing in. The control activates only when SIS returns enrolled classes. |
 | PDC login expired | Sign in normally, then reload PDC. |
 | Nothing selected in a batch | Upcoming sessions are selected initially. Choose **Select all** to include past sessions. |
 | Schedule cannot be exported | Check that PDC has published valid dates, times, and meeting weekdays. Ambiguous schedules are not guessed. |
@@ -143,13 +156,14 @@ The ZIP is written to `dist/`. To load the source directly, select `extension/` 
 | Location | Purpose |
 | --- | --- |
 | `extension/content.js` | PDC adapter and injected buttons |
+| `extension/sis-bridge.js`, `extension/sis-content.js` | SIS schedule capture and injected class-schedule control |
 | `extension/event.*`, `extension/batch.*` | Individual and batch previews |
 | `extension/lib/` | Schedule conversion, iCalendar export, and CalDAV writes |
 | `tests/` | Unit tests with fictional event data |
-| `scripts/browser-test.mjs` | Actual extension tested against simulated PDC/calendar responses |
+| `scripts/browser-test.mjs` | Actual extension tested against simulated PDC, SIS, and calendar responses |
 | `scripts/package.py` | Creates the ZIP with `manifest.json` at its root |
 
-Version 0.2.0 passed **18 unit tests and 12 browser integration checks**. Automated tests do not write to real student calendars. See [VALIDATION.md](VALIDATION.md) for test scope and live checks still needed.
+Version 0.3.0 passed **20 unit tests and 13 browser integration checks**. Automated tests do not write to real student calendars. See [VALIDATION.md](VALIDATION.md) for test scope and live checks still needed.
 
 ## License and references
 

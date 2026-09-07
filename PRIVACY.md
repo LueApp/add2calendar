@@ -10,6 +10,12 @@ On the PDC website, the extension reads your enrollment records and event schedu
 
 Only event fields (title, code, times, venue, instructors, remarks, enquiry email, and a fixed PDC source URL) are passed to the extension preview. Student-profile fields are not copied. Draft previews use browser session storage and expire after 24 hours; expired drafts are pruned when a new draft is created. Browser session storage is cleared when the browser session ends.
 
+## SIS access
+
+On **My Class Schedule**, SIS loads the signed-in student’s schedule from its own same-origin API. Add2Calendar observes that response without changing it, keeps only course code, title, section, enrollment status, dates, weekdays, times, room, and instructor names, and passes those fields to the extension background worker when you click **Add class schedule**. Student IDs and authentication data are discarded in the page before the schedule reaches the extension preview.
+
+Waitlisted and dropped classes are not exported. The extension does not submit enrollment, drop, swap, or approval requests in SIS. It does not read passwords, authentication codes, grades, credits, deadlines, or unrelated SIS pages.
+
 ## Calendar destinations
 
 - **Outlook / Google:** choosing to open a session sends its details in a prefilled calendar URL to that provider. You finish saving in the provider’s interface. The URL may appear in browser history. Their own account and privacy policies apply.
@@ -18,6 +24,6 @@ Only event fields (title, code, times, venue, instructors, remarks, enquiry emai
 
 ## Local settings and permissions
 
-Your provider preference, reminder choice, and optional Nextcloud connection are stored in `chrome.storage.local`, not Chrome Sync. Nextcloud app passwords are stored without additional encryption. Local storage is restricted to trusted extension contexts so PDC content scripts cannot access it. The extension requests optional host access only for the HTTPS Nextcloud server you configure. Its manifest declares possible HTTPS origins to allow students to use different servers; it does not request access to all of them at installation.
+Your provider preference, reminder choice, and optional Nextcloud connection are stored in `chrome.storage.local`, not Chrome Sync. Nextcloud app passwords are stored without additional encryption. Local storage is restricted to trusted extension contexts so PDC and SIS content scripts cannot access it. The extension requests optional host access only for the HTTPS Nextcloud server you configure. Its manifest declares possible HTTPS origins to allow students to use different servers; it does not request access to all of them at installation.
 
 Use Settings → Forget connection to remove Nextcloud settings and its optional host permission. Revoke the app password in Nextcloud Security to invalidate it at the server. Removing the extension deletes its local settings, but does not remove calendar entries or downloaded files.

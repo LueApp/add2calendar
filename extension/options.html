@@ -1,9 +1,9 @@
 <!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Settings · Add2Calendar</title><link rel="stylesheet" href="styles.css"></head>
 <body><main>
-  <header><div class="brand"><span class="mark" aria-hidden="true">▦</span>Add2Calendar</div><a href="https://pdc.hkust-gz.edu.cn/enrollment-records" target="_blank" rel="noopener">Open PDC ↗</a></header>
-  <p class="eyebrow">Your calendar, your choice</p><h1>A place for your next seminar.</h1>
-  <p class="muted">Sign into PDC as usual. An “Add to calendar” button will appear beside your enrolled events. Choose where to save each event.</p>
+  <header><div class="brand"><span class="mark" aria-hidden="true">▦</span>Add2Calendar</div><nav class="source-links"><a href="https://pdc.hkust-gz.edu.cn/enrollment-records" target="_blank" rel="noopener">Open PDC ↗</a><a href="https://sisn.hkust-gz.edu.cn/classes/my-class-schedule" target="_blank" rel="noopener">Open SIS ↗</a></nav></header>
+  <p class="eyebrow">Your calendar, your choice</p><h1>A place for campus events and classes.</h1>
+  <p class="muted">Sign into PDC or SIS as usual. Add2Calendar appears on supported schedule pages and lets you choose where to save each event.</p>
   <section class="card"><h2>Default preferences</h2><div class="grid">
     <div><label for="provider">Calendar</label><select id="provider"><option value="outlook-school">Outlook · school / Microsoft 365</option><option value="outlook-personal">Outlook.com · personal</option><option value="google">Google Calendar</option><option value="nextcloud">Nextcloud</option><option value="ics">Calendar file (.ics)</option></select></div>
     <div><label for="reminder">Reminder for Nextcloud / calendar file</label><select id="reminder"><option value="0">No reminder</option><option value="5">5 minutes before</option><option value="15" selected>15 minutes before</option><option value="30">30 minutes before</option><option value="60">1 hour before</option><option value="1440">1 day before</option></select></div>
@@ -13,10 +13,10 @@
     <form id="nextcloud-form">
       <div class="field"><label for="calendar-url">Private calendar URL</label><input id="calendar-url" type="url" required placeholder="https://cloud.example.com/remote.php/dav/calendars/username/pdc-seminars/" autocomplete="off"><p class="help">In Nextcloud Calendar, open the ⋯ menu beside your target calendar and copy its private link. Use the link for that calendar, not a public share or the general Calendar page.</p></div>
       <div class="grid"><div class="field"><label for="username">Nextcloud username</label><input id="username" required autocomplete="off" spellcheck="false"></div><div class="field"><label for="app-password">Nextcloud app password</label><input id="app-password" type="password" autocomplete="new-password" placeholder="Create in Nextcloud → Settings → Security"><p class="help" id="password-help">Use a separate app password for Add2Calendar.</p></div></div>
-      <p class="help">Chrome will ask for access only to the Nextcloud server you enter. The app password is stored locally in this extension and is not synced to your Google account or exposed to the PDC page.</p>
+      <p class="help">Chrome will ask for access only to the Nextcloud server you enter. The app password is stored locally in this extension, is not synced to your Google account, and is not exposed to PDC or SIS pages.</p>
       <div class="actions"><button type="submit" id="connect">Save Nextcloud connection</button><button type="button" id="disconnect" class="secondary">Forget connection</button></div>
     </form>
   </section>
   <div id="status" role="status" hidden></div>
-  <p class="footnote">Independent student tool, not an official HKUST(GZ) application. No analytics or external service. Calendar events are added only when you choose to add or export them. Later PDC changes are not synchronized.</p>
+  <p class="footnote">Independent student tool, not an official HKUST(GZ) application. No analytics or external service. Calendar entries are created only when you choose to add or export them. Later source changes are not synchronized.</p>
 </main><script type="module" src="options.js"></script></body></html>

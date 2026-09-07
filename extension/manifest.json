@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
   "name": "Add2Calendar · HKUST(GZ)",
-  "version": "0.2.0",
-  "description": "Bring enrolled HKUST(GZ) events to Outlook, Google Calendar, Nextcloud, or an iCalendar file.",
+  "version": "0.3.0",
+  "description": "Bring HKUST(GZ) PDC events and SIS class schedules to Outlook, Google Calendar, Nextcloud, or iCalendar.",
   "minimum_chrome_version": "120",
   "permissions": ["storage"],
   "optional_host_permissions": ["https://*/*"],
@@ -14,5 +14,15 @@
     "js": ["content.js"],
     "css": ["content.css"],
     "run_at": "document_idle"
+  }, {
+    "matches": ["https://sisn.hkust-gz.edu.cn/*"],
+    "js": ["sis-bridge.js"],
+    "run_at": "document_start",
+    "world": "MAIN"
+  }, {
+    "matches": ["https://sisn.hkust-gz.edu.cn/*"],
+    "js": ["sis-content.js"],
+    "css": ["sis-content.css"],
+    "run_at": "document_start"
   }]
 }

@@ -90,10 +90,16 @@ async function init() {
   const draft = (await chrome.storage.session.get(`draft:${id}`))[`draft:${id}`];
   if (!draft?.events || Date.now() - draft.created > 86400000) throw new Error('This batch preview has expired. Return to PDC and click Add multiple events again.');
   events = draft.events;
+  const sources = [...new Set(events.map(event => event.sourceName).filter(Boolean))];
+  const sourceName = sources.length === 1 ? sources[0] : 'source';
+  const sis = sourceName === 'SIS';
   const { preferences: prefs } = await chrome.storage.local.get('preferences');
   if (prefs && [...$('provider').options].some(option => option.value === prefs.provider)) $('provider').value = prefs.provider;
   if (prefs && [...$('reminder').options].some(option => option.value === String(prefs.reminder))) $('reminder').value = String(prefs.reminder);
-  $('subtitle').textContent = `${events.length} enrolled event(s) available across all PDC enrollment pages.`;
+  $('subtitle').textContent = sis ? `${events.length} enrolled class(es) available from SIS.` : `${events.length} enrolled event(s) available across all PDC enrollment pages.`;
+  $('events-title').textContent = sis ? 'Your enrolled classes' : 'Your enrolled events';
+  $('events-help').textContent = `Upcoming sessions are selected initially. Uncheck ${sis ? 'classes' : 'events'} already in your calendar. All times below are China Standard Time (UTC+08:00).`;
+  $('source-note').textContent = `Imported ${sis ? 'classes' : 'events'} are copies. Later ${sourceName} changes are not synchronized. Repeated Outlook or Google imports may create duplicates.`;
   for (const [index, event] of events.entries()) {
     const section = document.createElement('section'); section.className = 'batch-event';
     const header = document.createElement('div'); header.className = 'batch-event-header';

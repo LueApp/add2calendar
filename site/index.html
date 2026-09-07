@@ -6,7 +6,7 @@
     <meta name="theme-color" content="#f7f4ee" />
     <meta
       name="description"
-      content="Add2Calendar is a focused calendar export extension for HKUST(GZ), with support for enrolled PDC events."
+      content="Export HKUST(GZ) PDC events and SIS class schedules to Outlook, Google Calendar, Nextcloud, or iCalendar."
     />
     <title>Add2Calendar · HKUST(GZ)</title>
     <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml" />
@@ -42,19 +42,19 @@
           <p class="eyebrow"><span></span> Calendar export for HKUST(GZ)</p>
           <h1 id="hero-title">Keep campus events where you’ll actually see them.</h1>
           <p class="hero-lede">
-            Add enrolled seminars to Outlook, Google Calendar, Nextcloud, or an <code>.ics</code> file—one at a time or in a batch.
+            Export PDC seminars and your recurring SIS class schedule to Outlook, Google Calendar, Nextcloud, or an <code>.ics</code> file.
           </p>
           <div class="hero-actions">
-            <a class="button button-primary" href="/downloads/add2calendar-0.2.0.zip" download>
+            <a class="button button-primary" href="/downloads/add2calendar-0.3.0.zip" download>
               <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m0 0 5-5m-5 5-5-5M5 21h14" /></svg>
-              Download v0.2.0
+              Download v0.3.0
             </a>
             <a class="button button-secondary" href="https://github.com/LueApp/add2calendar" target="_blank" rel="noopener noreferrer">
               View on GitHub <span aria-hidden="true">↗</span>
             </a>
           </div>
           <ul class="hero-facts" aria-label="Requirements and project facts">
-            <li>Chrome 120+</li>
+            <li>PDC + SIS</li>
             <li>No account needed</li>
             <li>MIT licensed</li>
           </ul>
@@ -91,7 +91,7 @@
       </section>
 
       <section class="quick-features" aria-label="Highlights">
-        <article><span class="feature-number">01</span><div><h2>One or many</h2><p>Add a single session or select events across every enrollment page.</p></div></article>
+        <article><span class="feature-number">01</span><div><h2>Events and classes</h2><p>Add one PDC session or export your recurring SIS class schedule in a batch.</p></div></article>
         <article><span class="feature-number">02</span><div><h2>Your calendar</h2><p>Choose Outlook, Google Calendar, Nextcloud, Apple Calendar, and more.</p></div></article>
         <article><span class="feature-number">03</span><div><h2>Private by design</h2><p>No analytics or backend. Your PDC token stays between the extension and PDC.</p></div></article>
       </section>
@@ -113,22 +113,22 @@
           </li>
           <li>
             <span class="step-index">03</span>
-            <div><h3>Open PDC</h3><p>Sign in normally and visit <strong>Event Enrollment</strong> or <strong>Enrollment Records</strong>. Use the new calendar buttons beside your enrolled events.</p></div>
+            <div><h3>Open PDC or SIS</h3><p>Use the calendar buttons on PDC enrollment pages, or <strong>Add class schedule</strong> on SIS <strong>My Class Schedule</strong>.</p></div>
           </li>
         </ol>
       </section>
 
       <section class="preview-section section" aria-labelledby="preview-title">
         <div class="preview-frame">
-          <img src="/assets/batch-preview.png" alt="Batch event preview showing two fictional seminars and Outlook import options" loading="lazy" width="1200" height="1654" />
+          <img src="/assets/batch-preview.png" alt="Batch event preview showing two fictional seminars and Outlook import options" loading="lazy" width="1200" height="1903" />
         </div>
         <div class="preview-copy">
           <p class="eyebrow"><span></span> Batch export</p>
           <h2 id="preview-title">Bring the whole week with you.</h2>
-          <p>Pick the events and sessions you want, then create one clean calendar file. Each event keeps its title, time, venue, instructors, and PDC source link.</p>
+          <p>Pick the events, classes, and sessions you want, then create one clean calendar file. Each entry keeps its title, time, venue, instructors, and source link.</p>
           <ul class="check-list">
-            <li><span>✓</span> Reads all enrollment pages</li>
-            <li><span>✓</span> Handles multi-session events</li>
+            <li><span>✓</span> Reads all PDC enrollment pages</li>
+            <li><span>✓</span> Exports enrolled SIS classes</li>
             <li><span>✓</span> Uses China Standard Time (UTC+08:00)</li>
           </ul>
           <p class="caption">Preview uses fictional event data.</p>
@@ -148,18 +148,18 @@
         </div>
         <aside class="notice">
           <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" /><path d="M12 11v6M12 7.5v.5" /></svg>
-          <p><strong>Keep an eye on PDC.</strong> Imported events are copies. Later schedule changes and cancellations do not sync automatically.</p>
+          <p><strong>Keep an eye on PDC and SIS.</strong> Imported entries are copies. Later schedule changes and cancellations do not sync automatically.</p>
         </aside>
       </section>
 
       <section class="download-section" aria-labelledby="download-title">
         <div>
-          <p class="eyebrow light"><span></span> Version 0.2.0</p>
+          <p class="eyebrow light"><span></span> Version 0.3.0</p>
           <h2 id="download-title">Put your next campus event where you’ll see it.</h2>
           <p>Free, open source, and built for HKUST(GZ) students.</p>
         </div>
         <div class="download-actions">
-          <a class="button button-light" href="/downloads/add2calendar-0.2.0.zip" download>
+          <a class="button button-light" href="/downloads/add2calendar-0.3.0.zip" download>
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m0 0 5-5m-5 5-5-5M5 21h14" /></svg>
             Download extension
           </a>

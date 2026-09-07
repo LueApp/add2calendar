@@ -22,6 +22,12 @@ const stored = new Set();
 context.on('page', page => page.on('pageerror', error => errors.push(error.message)));
 const row = (event, registered) => `<tr data-row-key="${event.activityEventCode}"><td>${event.description}</td><td>10 Sep 2026</td><td>14:30 – 16:00</td><td><button class="enroll" ${registered ? 'disabled' : ''}>Enroll</button><button class="drop" ${registered ? '' : 'disabled'}>Drop</button></td></tr><tr data-row-key="${event.activityEventCode}-remark-row"><td colspan="4">Remarks</td></tr>`;
 const html = () => `<!doctype html><html><head><title>PDC test fixture</title><style>body{font:14px system-ui;margin:40px}td{padding:20px;border-bottom:1px solid #ddd}table{width:100%;border-collapse:collapse}button{margin:4px}</style></head><body><h1>Enrollment Records — synthetic test data</h1><table><tbody>${row(seminar, true)}${row(series, enrolled.length > 1)}</tbody></table><script>sessionStorage.setItem('auth-token','synthetic-test-token');</script></body></html>`;
+const sisCourse = {
+  classId: 'SYNTHETIC-CLASS-101', classNbr: '1234', classSection: 'L1', subjectArea: 'COMP', catalogNbr: '5001',
+  crseShortDesc: 'Synthetic Systems Seminar', enrollmentStatus: 'enrolSuccess', enrollmentStatusEnDesc: 'Enrolled',
+  meetingInfoList: [{ startDate: '2026-09-07', endDate: '2026-09-18', weekDay: '1,3', meetingStartTime: '10:00', meetingEndTime: '11:30', facilityName: 'Synthetic Room 101', instructorList: [{ instructorName: 'Dr. Example', instructorRoleInd: 'PI' }] }]
+};
+const sisHtml = `<!doctype html><html><head><title>SIS test fixture</title></head><body><main><h1>My Class Schedule</h1></main><script>fetch('/api/student/queryMyClassSchedulePage',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({synthetic:true})});</script></body></html>`;
 
 await context.route('https://**/*', async route => {
   const request = route.request(), url = new URL(request.url());
@@ -38,6 +44,15 @@ await context.route('https://**/*', async route => {
       return;
     }
     if (['/enrollment-records', '/event-enrollment'].includes(url.pathname)) { await route.fulfill({ contentType: 'text/html', body: html() }); return; }
+    if (url.pathname === '/favicon.ico') { await route.fulfill({ status: 204 }); return; }
+  }
+  if (url.hostname === 'sisn.hkust-gz.edu.cn') {
+    if (url.pathname === '/classes/my-class-schedule') { await route.fulfill({ contentType: 'text/html', body: sisHtml }); return; }
+    if (url.pathname === '/api/student/queryMyClassSchedulePage') {
+      assert.equal(request.method(), 'POST');
+      await route.fulfill({ json: { code: '0', data: [sisCourse, { ...sisCourse, classId: 'WAITLISTED', enrollmentStatus: 'waitlistSuccess', enrollmentStatusEnDesc: 'Waitlisted' }] } });
+      return;
+    }
     if (url.pathname === '/favicon.ico') { await route.fulfill({ status: 204 }); return; }
   }
   if (['outlook.office.com', 'outlook.live.com', 'calendar.google.com'].includes(url.hostname)) {
@@ -230,5 +245,26 @@ try {
   assert.equal(errors.length, 0, errors.join('\n'));
   assert.equal(unexpected.length, 0, unexpected.join('\n'));
   console.log('PASS: expired PDC login is reported; no page errors or unexpected network destinations');
+
+  const sis = await context.newPage();
+  await sis.goto('https://sisn.hkust-gz.edu.cn/classes/my-class-schedule');
+  await sis.locator('#add2calendar-sis-toolbar button:not(:disabled)').waitFor();
+  assert.equal(await sis.locator('#add2calendar-sis-toolbar span').textContent(), '1 enrolled class ready');
+  const sisBatchOpened = context.waitForEvent('page');
+  await sis.locator('#add2calendar-sis-toolbar button').click();
+  const sisBatch = await sisBatchOpened;
+  await sisBatch.locator('#content:not([hidden])').waitFor();
+  assert.equal(await sisBatch.locator('.batch-event').count(), 1);
+  assert.equal(await sisBatch.locator('.session').count(), 4);
+  assert.match(await sisBatch.locator('.batch-event').textContent(), /COMP 5001 · Synthetic Systems Seminar/);
+  const sisDownloadPromise = sisBatch.waitForEvent('download');
+  await sisBatch.locator('#add').click();
+  const sisDownload = await sisDownloadPromise;
+  await sisDownload.saveAs(path.join(output, 'sis-schedule.ics'));
+  const sisText = (await readFile(path.join(output, 'sis-schedule.ics'), 'utf8')).replace(/\r\n /g, '');
+  assert.match(sisText, /UID:sis-[a-f0-9]{64}@add2calendar\.local/);
+  assert.match(sisText, /URL:https:\/\/sisn\.hkust-gz\.edu\.cn\/classes\/my-class-schedule/);
+  console.log('PASS: SIS schedule response creates a calendar button and exports enrolled recurring classes');
+
   console.log(`Browser integration checks passed. Screenshots: ${output}`);
 } finally { await context.close(); }
