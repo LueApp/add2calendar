@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title data-i18n="cleanupPageTitle">Outlook cleanup · Add2Calendar</title><link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="outlook.css"></head>
+<body><main class="cleanup-main">
+  <header><div class="brand"><span class="mark" aria-hidden="true">▦</span>Add2Calendar</div><a href="options.html" data-i18n="settings">Settings</a></header>
+  <p class="eyebrow" data-i18n="advancedOutlook">Advanced · Outlook cleanup</p>
+  <h1 data-i18n="cleanupHeading">Review Outlook events before removing them.</h1>
+  <p class="muted" data-i18n="cleanupIntro">This tool can display arbitrary events from a calendar and date range. Nothing is selected or deleted automatically.</p>
+  <aside class="cleanup-warning"><strong data-i18n="fullAccessHeading">Full calendar access</strong><p data-i18n="fullAccessBody">Microsoft requires Calendars.ReadWrite permission to list and delete events. Access begins only when you click Connect and lasts in this tab until it expires or you disconnect.</p></aside>
+
+  <section id="connect-panel" class="card">
+    <h2 data-i18n="connectOutlook">Connect to Outlook</h2>
+    <p class="muted" data-i18n="connectOutlookHelp">Microsoft will show the requested permission before continuing.</p>
+    <div class="actions"><button id="connect-outlook" data-i18n="connectReview">Connect and review events</button></div>
+  </section>
+
+  <section id="browser-panel" hidden>
+    <section class="card cleanup-controls">
+      <div class="grid three">
+        <div><label for="outlook-calendar" data-i18n="outlookCalendar">Outlook calendar</label><select id="outlook-calendar"></select></div>
+        <div><label for="range-start" data-i18n="fromDate">From</label><input id="range-start" type="date" required></div>
+        <div><label for="range-end" data-i18n="toDate">To</label><input id="range-end" type="date" required></div>
+      </div>
+      <div class="actions"><button id="load-outlook-events" data-i18n="loadOutlookEvents">Load events</button><button id="disconnect-outlook" class="secondary" data-i18n="disconnectOutlook">Disconnect</button></div>
+    </section>
+    <section id="event-panel" class="card" hidden>
+      <div class="cleanup-toolbar"><input id="event-search" type="search" data-i18n-placeholder="searchEvents" placeholder="Search title, location, or organizer"><div class="actions"><button id="select-visible" class="secondary" data-i18n="selectVisible">Select visible</button><button id="clear-outlook-selection" class="secondary" data-i18n="clearSelection">Clear selection</button></div></div>
+      <p id="event-summary" class="help"></p>
+      <div id="outlook-events" class="cleanup-events"></div>
+      <div class="cleanup-review"><span id="cleanup-selection"></span><button id="review-delete" class="danger" disabled data-i18n="reviewDeletion">Review deletion</button></div>
+    </section>
+  </section>
+  <div id="cleanup-status" role="status" hidden></div>
+
+  <dialog id="delete-dialog">
+    <form method="dialog" class="dialog-card">
+      <h2 data-i18n="confirmDeletion">Confirm deletion</h2>
+      <p id="delete-summary"></p>
+      <div id="delete-risk" class="danger-note" hidden></div>
+      <ul id="delete-preview"></ul>
+      <label class="confirm-check"><input id="confirm-delete" type="checkbox"> <span data-i18n="understandDeletion">I understand that these events will be removed from Outlook.</span></label>
+      <div class="actions"><button value="cancel" class="secondary" data-i18n="cancel">Cancel</button><button id="delete-events" value="default" type="button" class="danger" disabled data-i18n="deleteSelected">Delete selected events</button></div>
+    </form>
+  </dialog>
+</main><script src="i18n.js"></script><script type="module" src="outlook.js"></script></body></html>

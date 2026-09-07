@@ -334,6 +334,10 @@ nav a:hover { color: var(--green); }
 .notice { max-width: 800px; margin: 34px auto 0; padding: 18px 22px; display: flex; align-items: flex-start; gap: 13px; border: 1px solid #e8c8b8; border-radius: 14px; background: #f7e9e0; color: #74422f; }
 .notice svg { width: 21px; flex: 0 0 auto; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; }
 .notice p { margin: 0; font-size: 14px; line-height: 1.55; }
+.cleanup-promo { margin-top: 54px; padding: 34px; display: grid; grid-template-columns: .9fr 1.1fr; gap: 50px; border: 1px solid var(--line); border-radius: var(--radius-md); background: var(--white); }
+.cleanup-promo h3 { margin: 0; font-family: "Avenir Next", "Segoe UI", "PingFang SC", sans-serif; font-size: 27px; line-height: 1.2; letter-spacing: -.025em; }
+.cleanup-promo > div > p:not(.eyebrow):not(.caption) { margin: 0; color: var(--muted); line-height: 1.65; }
+.cleanup-promo .caption { margin: 14px 0 0; color: #8a5a43; font-size: 12px; line-height: 1.55; }
 
 .download-section {
   width: min(1180px, calc(100% - 48px));
@@ -428,6 +432,7 @@ a:focus-visible { outline: 3px solid var(--orange); outline-offset: 3px; }
   .preview-copy { padding: 0 8px; }
   .calendar-grid { grid-template-columns: 1fr; }
   .calendar-grid article { min-height: 210px; }
+  .cleanup-promo { padding: 26px; grid-template-columns: 1fr; gap: 24px; }
   .download-section { margin-bottom: 50px; padding: 48px 28px; flex-direction: column; align-items: flex-start; }
   .download-actions { width: 100%; }
   footer { align-items: flex-start; flex-direction: column; }

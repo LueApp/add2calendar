@@ -21,6 +21,7 @@ with ZipFile(target) as archive:
     for entry in manifest['content_scripts']:
         required.extend(entry.get('js', []))
         required.extend(entry.get('css', []))
+    required.extend(['outlook.html', 'outlook.js', 'outlook.css', 'lib/outlook.mjs', 'lib/i18n.mjs', '_locales/en/messages.json', '_locales/zh_CN/messages.json'])
     missing = set(required) - set(archive.namelist())
     if missing:
         raise RuntimeError(f'Missing extension files: {sorted(missing)}')

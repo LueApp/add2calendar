@@ -42,6 +42,7 @@ a { color: #176b57; text-underline-offset: 3px; }
 .footnote { font-size: 12px; color: #718277; margin-top: 24px; }
 details summary { cursor: pointer; color: #55776a; font-size: 13px; }
 pre { white-space: pre-wrap; font: inherit; font-size: 13px; }
+.redirect-code { display: block; padding: 10px 12px; overflow-wrap: anywhere; border: 1px solid #dfe7e1; border-radius: 8px; color: #365e52; background: #f7faf7; user-select: all; }
 .batch-event { margin-top: 25px; padding-top: 18px; border-top: 1px solid #dfe7e1; }
 .batch-event-header { display: flex; align-items: flex-start; gap: 13px; margin-bottom: 12px; }
 .batch-event-header label { margin: 0; font-size: 16px; }

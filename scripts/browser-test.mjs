@@ -295,5 +295,67 @@ try {
   assert.match(sisDomText, /LOCATION:Synthetic Room 303/);
   console.log('PASS: visible SIS table fallback activates the button when the API response was missed');
 
+  await settings.evaluate(() => {
+    chrome.permissions.request = async () => true;
+    chrome.permissions.remove = async () => true;
+  });
+  await settings.locator('#microsoft-client-id').fill('12345678-1234-4123-8123-123456789abc');
+  await settings.locator('#activate-outlook-cleanup').click();
+  await settings.locator('#open-outlook-cleanup:not([hidden])').waitFor();
+  const cleanupConfig = await worker.evaluate(async () => (await chrome.storage.local.get('outlookCleanup')).outlookCleanup);
+  assert.deepEqual(cleanupConfig, { enabled: true, clientId: '12345678-1234-4123-8123-123456789abc' });
+
+  const cleanup = await context.newPage();
+  await cleanup.addInitScript(() => {
+    chrome.identity.launchWebAuthFlow = async ({ url }) => {
+      const request = new URL(url);
+      return `${chrome.identity.getRedirectURL('outlook')}?code=synthetic-code&state=${encodeURIComponent(request.searchParams.get('state'))}`;
+    };
+    globalThis.deletedRequests = [];
+    globalThis.fetch = async (url, options = {}) => {
+      const target = new URL(url);
+      if (target.hostname === 'login.microsoftonline.com' && target.pathname.endsWith('/token'))
+        return new Response(JSON.stringify({ access_token: 'synthetic-graph-token', expires_in: 3600 }), { status: 200, headers: { 'content-type': 'application/json' } });
+      if (target.hostname === 'graph.microsoft.com' && target.pathname === '/v1.0/me/calendars')
+        return new Response(JSON.stringify({ value: [{ id: 'calendar-1', name: 'Primary', isDefaultCalendar: true, canEdit: true }] }), { status: 200, headers: { 'content-type': 'application/json' } });
+      if (target.hostname === 'graph.microsoft.com' && target.pathname.endsWith('/calendarView')) {
+        const value = [
+          { id: 'appointment-1', subject: 'Arbitrary appointment', start: { dateTime: '2026-09-10T02:00:00Z' }, end: { dateTime: '2026-09-10T03:00:00Z' }, location: { displayName: 'Room A' }, organizer: { emailAddress: { name: 'Owner' } }, type: 'singleInstance', isOrganizer: true, attendees: [] },
+          { id: 'meeting-1', subject: 'Organizer meeting', start: { dateTime: '2026-09-11T02:00:00Z' }, end: { dateTime: '2026-09-11T03:00:00Z' }, location: { displayName: 'Room B' }, organizer: { emailAddress: { name: 'Owner' } }, type: 'occurrence', isOrganizer: true, attendees: [{ emailAddress: { address: 'guest@example.com' } }] },
+          { id: 'invitation-1', subject: 'External invitation', start: { dateTime: '2026-09-12T02:00:00Z' }, end: { dateTime: '2026-09-12T03:00:00Z' }, location: { displayName: 'Online' }, organizer: { emailAddress: { name: 'Someone else' } }, type: 'singleInstance', isOrganizer: false, attendees: [{ emailAddress: { address: 'test@example.com' } }] }
+        ];
+        return new Response(JSON.stringify({ value }), { status: 200, headers: { 'content-type': 'application/json' } });
+      }
+      if (target.hostname === 'graph.microsoft.com' && target.pathname === '/v1.0/$batch') {
+        const body = JSON.parse(options.body); globalThis.deletedRequests.push(...body.requests);
+        return new Response(JSON.stringify({ responses: body.requests.map(request => ({ id: request.id, status: 204 })) }), { status: 200, headers: { 'content-type': 'application/json' } });
+      }
+      throw new Error(`Unexpected cleanup request: ${target.href}`);
+    };
+  });
+  await cleanup.goto(`chrome-extension://${id}/outlook.html`);
+  await cleanup.locator('#connect-outlook').click();
+  await cleanup.locator('#browser-panel:not([hidden])').waitFor();
+  await cleanup.locator('#load-outlook-events').click();
+  await cleanup.locator('.cleanup-event').first().waitFor();
+  assert.equal(await cleanup.locator('.cleanup-event').count(), 3);
+  assert.equal(await cleanup.locator('.event-badge.risk').count(), 3);
+  await cleanup.locator('#select-visible').click();
+  await cleanup.locator('#review-delete').click();
+  await cleanup.locator('#delete-dialog[open]').waitFor();
+  assert.equal(await cleanup.locator('#delete-risk').isVisible(), true);
+  await cleanup.screenshot({ path: path.join(output, 'outlook-cleanup.png'), fullPage: true });
+  await cleanup.locator('#confirm-delete').check();
+  await cleanup.locator('#delete-events').click();
+  await cleanup.waitForFunction(() => globalThis.deletedRequests.length === 3);
+  await cleanup.waitForFunction(() => document.querySelectorAll('.cleanup-event').length === 0);
+  assert.equal(await cleanup.locator('.cleanup-event').count(), 0);
+  assert.ok((await cleanup.evaluate(() => globalThis.deletedRequests)).every(request => request.method === 'DELETE'));
+  const cleanupStorage = await worker.evaluate(() => chrome.storage.local.get(null));
+  assert.ok(!JSON.stringify(cleanupStorage).includes('synthetic-graph-token'));
+  await settings.locator('#deactivate-outlook-cleanup').click();
+  await settings.locator('#open-outlook-cleanup').waitFor({ state: 'hidden' });
+  console.log('PASS: Outlook cleanup requires manual activation, explicit selection and confirmed Graph deletion');
+
   console.log(`Browser integration checks passed. Screenshots: ${output}`);
 } finally { await context.close(); }

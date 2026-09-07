@@ -4,6 +4,8 @@
 
 **Calendar export for HKUST(GZ).** Add2Calendar is a Chrome extension that brings campus schedules to the calendar you already use. Export enrolled seminars from [PDC](https://pdc.hkust-gz.edu.cn/enrollment-records) and recurring classes from [SIS](https://sisn.hkust-gz.edu.cn/classes/my-class-schedule) to Outlook, Google Calendar, Nextcloud, or an `.ics` file.
 
+An optional, manually activated Outlook cleanup tool can also review and remove arbitrary calendar events through Microsoft Graph.
+
 **[Download the latest release](https://github.com/LueApp/add2calendar/releases/latest)** · [All releases](https://github.com/LueApp/add2calendar/releases) · [Report an issue](https://github.com/LueApp/add2calendar/issues)
 
 ## Website
@@ -104,6 +106,22 @@ Use the private link for a **specific calendar**, not a public share, general Ca
 
 Identical sessions previously added by this extension are skipped, and existing entries are never overwritten. Entries created manually or through another tool may not be recognized as duplicates. Re-adding a rescheduled seminar creates a new time entry and leaves the old entry in place.
 
+## Outlook cleanup (advanced, manual activation)
+
+This optional tool can review and delete **any events in your Outlook calendar**, including entries created manually or by other applications. It is disabled by default and never opens, signs in, loads events, selects events, or deletes events automatically.
+
+Microsoft requires a registered Entra application and delegated `Calendars.ReadWrite` access:
+
+1. In Microsoft Entra, create an app registration for the account types you intend to support.
+2. Under **Authentication**, add a **Single-page application** redirect URI. Copy the exact redirect URL shown in Add2Calendar Settings; it is unique to the installed extension.
+3. Under **API permissions**, add Microsoft Graph → Delegated permissions → `Calendars.ReadWrite`.
+4. Copy the application’s **Application (client) ID** into Add2Calendar Settings and click **Activate Outlook cleanup**.
+5. Click **Open cleanup tool**, then **Connect and review events**. Microsoft shows the requested permission before continuing.
+6. Choose a calendar and date range, load events, filter and select the entries to remove, then click **Review deletion**.
+7. Review organizer-meeting and recurrence warnings, tick the confirmation box, and delete the selected events.
+
+The cleanup tab stores its Microsoft access token only in memory. Closing it, disconnecting, or allowing the token to expire removes the token. Deactivating cleanup removes its optional Microsoft host access and local configuration. A school tenant may prevent user consent; in that case its Microsoft administrator must approve the application.
+
 ## Update an existing installation
 
 1. Download and extract the new release.
@@ -119,6 +137,7 @@ Keep the installation folder in place. Reusing its path preserves the unpacked e
 - The PDC token is used only for read requests to PDC. The SIS adapter observes the schedule response already loaded by SIS and removes student identifiers before passing class data to the extension.
 - Nextcloud credentials stay in local extension storage, separate from campus content scripts and Chrome Sync. The app password is **not additionally encrypted at rest**; use a dedicated, revocable app password.
 - The extension does not enroll in, drop, or swap events or classes, or bypass university authentication.
+- Outlook cleanup remains inactive until configured and manually activated. Microsoft grants it broad calendar read/write access, so every deletion requires explicit selection, review, and confirmation.
 - The supported sources are HKUST(GZ) PDC and SIS. Changes to either website’s internal interface may require extension updates.
 - Imported entries are not subscriptions. Check PDC or SIS for later changes and cancellations.
 
@@ -136,6 +155,7 @@ Read the [privacy details](PRIVACY.md) and [validation notes](VALIDATION.md).
 | Outlook link loses details or uses the wrong account | Choose the matching school/personal option or use `.ics` import. |
 | Nextcloud rejects the connection | Check the specific calendar’s private URL, actual username, app password, and write access. |
 | Some Nextcloud additions fail | Check the result counts and retry. Successfully added identical sessions are skipped. |
+| Outlook cleanup cannot connect | Verify the Entra client ID, exact redirect URL, SPA platform type, delegated `Calendars.ReadWrite` permission, and any school-tenant consent policy. |
 
 When reporting an issue, include the extension version and error text. Remove tokens, app passwords, student identifiers, and private event details from screenshots or logs.
 
@@ -159,13 +179,14 @@ The ZIP is written to `dist/`. To load the source directly, select `extension/` 
 | --- | --- |
 | `extension/content.js` | PDC adapter and injected buttons |
 | `extension/sis-bridge.js`, `extension/sis-content.js` | SIS schedule capture and injected class-schedule control |
+| `extension/outlook.*`, `extension/lib/outlook.mjs` | Manually activated Outlook event review and cleanup |
 | `extension/event.*`, `extension/batch.*` | Individual and batch previews |
 | `extension/lib/` | Schedule conversion, iCalendar export, and CalDAV writes |
 | `tests/` | Unit tests with fictional event data |
 | `scripts/browser-test.mjs` | Actual extension tested against simulated PDC, SIS, and calendar responses |
 | `scripts/package.py` | Creates the ZIP with `manifest.json` at its root |
 
-Version 0.3.3 passed **21 unit tests and 14 browser integration checks**. Automated tests do not write to real student calendars. See [VALIDATION.md](VALIDATION.md) for test scope and live checks still needed.
+Version 0.4.0 passed **26 unit tests and 15 browser integration checks**. Automated tests do not write to real student calendars. See [VALIDATION.md](VALIDATION.md) for test scope and live checks still needed.
 
 ## License and references
 

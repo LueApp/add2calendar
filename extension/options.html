@@ -17,6 +17,15 @@
       <div class="actions"><button type="submit" id="connect" data-i18n="saveConnection">Save Nextcloud connection</button><button type="button" id="disconnect" class="secondary" data-i18n="forgetConnection">Forget connection</button></div>
     </form>
   </section>
+  <section class="card" id="outlook-cleanup-settings">
+    <p class="eyebrow" data-i18n="advancedFeature">Advanced feature</p>
+    <h2><span data-i18n="outlookCleanup">Outlook cleanup</span> <span class="badge" data-i18n="manualActivation">Manual activation</span></h2>
+    <p class="muted" data-i18n="outlookCleanupIntro">Review and remove arbitrary Outlook events by calendar and date range. This requires Microsoft Calendars.ReadWrite access and never starts automatically.</p>
+    <div class="field"><label for="microsoft-client-id" data-i18n="microsoftClientId">Microsoft application client ID</label><input id="microsoft-client-id" autocomplete="off" spellcheck="false" placeholder="00000000-0000-0000-0000-000000000000"><p class="help" data-i18n="clientIdHelp">Create a Microsoft Entra single-page application, add Calendars.ReadWrite delegated permission, and register the redirect URL shown below.</p></div>
+    <div class="field"><label data-i18n="redirectUrl">Redirect URL</label><code id="outlook-redirect-url" class="redirect-code"></code><p class="help" data-i18n="redirectHelp">The redirect URL is unique to this installed extension and must exactly match the URI in Microsoft Entra.</p></div>
+    <div class="actions"><button id="activate-outlook-cleanup" data-i18n="activateCleanup">Activate Outlook cleanup</button><a id="open-outlook-cleanup" class="button" href="outlook.html" target="_blank" data-i18n="openCleanup" hidden>Open cleanup tool</a><button id="deactivate-outlook-cleanup" class="secondary" data-i18n="deactivateCleanup" hidden>Deactivate</button></div>
+    <p id="outlook-cleanup-state" class="help"></p>
+  </section>
   <div id="status" role="status" hidden></div>
   <p class="footnote" data-i18n="independentFootnote">Independent student tool, not an official HKUST(GZ) application. No analytics or external service. Calendar entries are created only when you choose to add or export them. Later source changes are not synchronized.</p>
 </main><script src="i18n.js"></script><script type="module" src="options.js"></script></body></html>

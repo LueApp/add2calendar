@@ -4,6 +4,8 @@
 
 **香港科技大学（广州）的日历导出工具。** Add2Calendar 是一个 Chrome 扩展，帮助你把校园安排放进日常使用的日历。它可以把 [PDC](https://pdc.hkust-gz.edu.cn/enrollment-records) 中已报名的讲座，以及 [SIS](https://sisn.hkust-gz.edu.cn/classes/my-class-schedule) 中周期性上课的课程，导出到 Outlook、Google 日历、Nextcloud 或 `.ics` 文件。
 
+可选的 Outlook 清理工具需要手动启用，并可通过 Microsoft Graph 查看和删除任意日历日程。
+
 **[下载最新版本](https://github.com/LueApp/add2calendar/releases/latest)** · [全部版本](https://github.com/LueApp/add2calendar/releases) · [反馈问题](https://github.com/LueApp/add2calendar/issues)
 
 ## 项目网站
@@ -104,6 +106,22 @@ SIS 的课程表按钮会打开同一个批量预览，每个已选班别作为�
 
 扩展会跳过此前由本扩展添加、且活动编码与起止时间一致的场次，不会覆盖现有条目。手动创建或通过其他工具导入的条目可能无法识别为重复。重新添加已改期的活动会产生新的时间条目，旧条目需要自行处理。
 
+## Outlook 清理（高级功能，手动启用）
+
+这个可选工具可以查看和删除 **Outlook 日历中的任意日程**，包括手动创建或由其他应用添加的内容。它默认关闭，并且绝不会自动打开、登录、加载、选择或删除日程。
+
+Microsoft 要求使用已注册的 Entra 应用，并授予委托的 `Calendars.ReadWrite` 权限：
+
+1. 在 Microsoft Entra 中创建应用注册，并选择需要支持的账号类型。
+2. 在**身份验证**中添加**单页应用程序**重定向 URI。请复制 Add2Calendar 设置页显示的完整重定向链接；该链接由当前安装的扩展生成。
+3. 在 **API 权限**中添加 Microsoft Graph → 委托的权限 → `Calendars.ReadWrite`。
+4. 将应用的**应用程序（客户端）ID**填入 Add2Calendar 设置，点击**启用 Outlook 清理**。
+5. 点击**打开清理工具**，再点击**连接并查看日程**。继续前，Microsoft 会显示所请求的权限。
+6. 选择日历和日期范围，加载日程，筛选并勾选要移除的条目，再点击**检查删除内容**。
+7. 检查会议组织者和周期性日程提示，勾选确认框，然后删除已选日程。
+
+Microsoft 访问令牌只保存在清理标签页的内存中。关闭标签页、主动断开或令牌过期都会移除令牌。停用清理功能会移除可选的 Microsoft 主机权限和本地配置。学校租户可能禁止用户自行同意；遇到这种情况，需要 Microsoft 管理员批准该应用。
+
 ## 更新已安装的扩展
 
 1. 下载并解压新版本。
@@ -119,6 +137,7 @@ SIS 的课程表按钮会打开同一个批量预览，每个已选班别作为�
 - PDC 登录令牌仅用于向 PDC 发起读取请求。SIS 适配器只观察 SIS 已加载的课表响应，并在传递课程数据前移除学生标识。
 - Nextcloud 连接信息保存在扩展本地存储中，不进入 Chrome 同步，也不向校园网页脚本开放。应用密码**没有额外的静态加密保护**，建议使用专门创建、可单独撤销的应用密码。
 - 扩展不会代替你报名、退选或换课，也不会绕过学校认证。
+- Outlook 清理只有在配置并手动启用后才会工作。Microsoft 会授予它较广的日历读写权限，因此每次删除都需要明确选择、检查并确认。
 - 适配的网站是香港科技大学（广州）PDC 和 SIS。任何一方的内部接口改变时，扩展可能需要更新。
 - 导入的日程不是订阅。请留意 PDC 或 SIS 后续的改期和取消。
 
@@ -136,6 +155,7 @@ SIS 的课程表按钮会打开同一个批量预览，每个已选班别作为�
 | Outlook 链接未保留信息或账号类型不对 | 选择对应的学校／个人选项，或使用 `.ics` 文件导入。 |
 | Nextcloud 拒绝连接 | 检查具体日历的私有链接、实际用户名、应用密码和写入权限。 |
 | 部分 Nextcloud 活动添加失败 | 查看结果数量后重试；此前成功添加的相同场次会被跳过。 |
+| Outlook 清理无法连接 | 检查 Entra 客户端 ID、完整重定向链接、SPA 平台类型、委托的 `Calendars.ReadWrite` 权限，以及学校租户的同意策略。 |
 
 反馈问题时请附上扩展版本和错误提示。分享截图或日志前，请移除登录令牌、应用密码、学号及不希望公开的活动详情。
 
@@ -159,13 +179,14 @@ npm run package
 | --- | --- |
 | `extension/content.js` | PDC 页面适配及按钮注入 |
 | `extension/sis-bridge.js`、`extension/sis-content.js` | 读取 SIS 课表响应并注入课程表按钮 |
+| `extension/outlook.*`、`extension/lib/outlook.mjs` | 需要手动启用的 Outlook 日程查看与清理工具 |
 | `extension/event.*`、`extension/batch.*` | 单个活动与批量预览 |
 | `extension/lib/` | 时间转换、iCalendar 导出及 CalDAV 写入 |
 | `tests/` | 使用虚构活动数据的单元测试 |
 | `scripts/browser-test.mjs` | 在模拟 PDC、SIS 及日历响应下测试真实扩展 |
 | `scripts/package.py` | 生成根目录包含 `manifest.json` 的 ZIP 安装包 |
 
-v0.3.3 已通过 **21 项单元测试和 14 项浏览器集成检查**。自动化测试不会写入真实学生日历。测试范围及仍需实测的项目见 [VALIDATION.md](VALIDATION.md)。
+v0.4.0 已通过 **26 项单元测试和 15 项浏览器集成检查**。自动化测试不会写入真实学生日历。测试范围及仍需实测的项目见 [VALIDATION.md](VALIDATION.md)。
 
 ## 许可证与参考资料
 

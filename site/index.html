@@ -6,7 +6,7 @@
     <meta name="theme-color" content="#f7f4ee" />
     <meta
       name="description"
-      content="Export HKUST(GZ) PDC events and SIS class schedules to Outlook, Google Calendar, Nextcloud, or iCalendar."
+      content="Export HKUST(GZ) PDC/SIS schedules and manually review or remove Outlook calendar events."
     />
     <title>Add2Calendar · HKUST(GZ)</title>
     <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml" />
@@ -45,9 +45,9 @@
             Export PDC seminars and your recurring SIS class schedule to Outlook, Google Calendar, Nextcloud, or an <code>.ics</code> file.
           </p>
           <div class="hero-actions">
-            <a class="button button-primary" href="/downloads/add2calendar-0.3.3.zip" download>
+            <a class="button button-primary" href="/downloads/add2calendar-0.4.0.zip" download>
               <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m0 0 5-5m-5 5-5-5M5 21h14" /></svg>
-              Download v0.3.3
+              Download v0.4.0
             </a>
             <a class="button button-secondary" href="https://github.com/LueApp/add2calendar" target="_blank" rel="noopener noreferrer">
               View on GitHub <span aria-hidden="true">↗</span>
@@ -150,16 +150,20 @@
           <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" /><path d="M12 11v6M12 7.5v.5" /></svg>
           <p><strong>Keep an eye on PDC and SIS.</strong> Imported entries are copies. Later schedule changes and cancellations do not sync automatically.</p>
         </aside>
+        <article class="cleanup-promo">
+          <div><p class="eyebrow"><span></span> Advanced · manual activation</p><h3>Review an Outlook calendar before cleaning it up.</h3></div>
+          <div><p>Choose a calendar and date range, search arbitrary events, select the entries you intend to remove, and review meeting and recurrence warnings before confirming deletion.</p><p class="caption">Requires a Microsoft Entra application and delegated Calendars.ReadWrite permission. The tool remains inactive until enabled from extension Settings.</p></div>
+        </article>
       </section>
 
       <section class="download-section" aria-labelledby="download-title">
         <div>
-          <p class="eyebrow light"><span></span> Version 0.3.3</p>
+          <p class="eyebrow light"><span></span> Version 0.4.0</p>
           <h2 id="download-title">Put your next campus event where you’ll see it.</h2>
           <p>Free, open source, and built for HKUST(GZ) students.</p>
         </div>
         <div class="download-actions">
-          <a class="button button-light" href="/downloads/add2calendar-0.3.3.zip" download>
+          <a class="button button-light" href="/downloads/add2calendar-0.4.0.zip" download>
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m0 0 5-5m-5 5-5-5M5 21h14" /></svg>
             Download extension
           </a>
