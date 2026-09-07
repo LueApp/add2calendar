@@ -1,6 +1,7 @@
 import { normalizeEvent } from './lib/calendar.mjs';
 import { normalizeBatch } from './lib/batch.mjs';
 import { normalizeSisBatch } from './lib/sis.mjs';
+import { t } from './lib/i18n.mjs';
 
 const storageReady = Promise.all([
   chrome.storage.local.setAccessLevel({ accessLevel: 'TRUSTED_CONTEXTS' }),
@@ -18,7 +19,7 @@ chrome.runtime.onMessage.addListener((message, sender, respond) => {
   const expectedOrigin = origins[message?.type];
   if (!expectedOrigin) return;
   if (sender.id !== chrome.runtime.id || sender.frameId !== 0 || !sender.tab || new URL(sender.url || 'about:blank').origin !== expectedOrigin) {
-    respond({ error: 'This action is not available on the current website.' });
+    respond({ error: t('actionUnavailable', undefined, 'This action is not available on the current website.') });
     return;
   }
   (async () => {
@@ -34,6 +35,6 @@ chrome.runtime.onMessage.addListener((message, sender, respond) => {
     await chrome.storage.session.set({ [`draft:${id}`]: { ...draft, created: Date.now() } });
     await chrome.tabs.create({ url: chrome.runtime.getURL(`${batch ? 'batch' : 'event'}.html?id=${id}`) });
     respond({ ok: true });
-  })().catch(error => respond({ error: error.message || 'Could not prepare the calendar event.' }));
+  })().catch(error => respond({ error: error.message || t('prepareEventFailed', undefined, 'Could not prepare the calendar event.') }));
   return true;
 });

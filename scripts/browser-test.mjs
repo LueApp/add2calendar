@@ -124,7 +124,7 @@ try {
 
   await preview.selectOption('#provider', 'nextcloud');
   await preview.locator('#add').click();
-  await preview.waitForFunction(() => document.getElementById('status').textContent.includes('Settings first'));
+  await preview.waitForFunction(() => document.getElementById('status').textContent.includes(chrome.i18n.getMessage('connectNextcloudFirst')));
   assert.equal(writes.length, 0);
   console.log('PASS: Nextcloud requires setup before attempting any calendar writes');
 
@@ -134,9 +134,9 @@ try {
     chrome.permissions.contains = async () => true;
   });
   await preview.locator('#add').click();
-  await preview.waitForFunction(() => document.getElementById('status').textContent.includes('1 added'));
+  await preview.waitForFunction(() => document.getElementById('status').textContent.includes(chrome.i18n.getMessage('nextcloudResult', ['1', '0', '0'])));
   await preview.locator('#add').click();
-  await preview.waitForFunction(() => document.getElementById('status').textContent.includes('1 already present'));
+  await preview.waitForFunction(() => document.getElementById('status').textContent.includes(chrome.i18n.getMessage('nextcloudResult', ['0', '1', '0'])));
   assert.equal(stored.size, 1);
   assert.ok(writes.every(body => !body.includes('synthetic-password') && !body.includes('synthetic-test-token')));
   console.log('PASS: Nextcloud preview sends conditional CalDAV writes and repeated clicks skip existing sessions (mock server/permission)');
@@ -153,7 +153,7 @@ try {
   assert.equal(await multi.locator('.session').count(), 4);
   await multi.selectOption('#provider', 'outlook-school');
   assert.equal(await multi.locator('#add').isDisabled(), false);
-  assert.equal(await multi.locator('#add').textContent(), 'Download for Outlook');
+  assert.equal(await multi.locator('#add').textContent(), await multi.evaluate(() => chrome.i18n.getMessage('downloadForOutlook')));
   assert.equal(await multi.locator('.session a:visible').count(), 4);
   await multi.screenshot({ path: path.join(output, 'multiple-sessions.png'), fullPage: true });
   const multiDownloadPromise = multi.waitForEvent('download');
@@ -182,7 +182,7 @@ try {
   await batch.locator('#select-all').click();
   const firstGroup = batch.locator('.batch-event').filter({ hasText: seminar.activityEventCode });
   await firstGroup.locator('.batch-event-header input').uncheck();
-  assert.match(await batch.locator('#selection-count').textContent(), /1 event\(s\) · 4 session/);
+  assert.equal(await batch.locator('#selection-count').textContent(), await batch.evaluate(() => chrome.i18n.getMessage('selectionCount', ['1', '4'])));
   const subsetDownloadPromise = batch.waitForEvent('download');
   await batch.locator('#add').click();
   const subsetDownload = await subsetDownloadPromise;
@@ -208,28 +208,30 @@ try {
   await batch.evaluate(() => { chrome.permissions.contains = async () => true; });
   await batch.selectOption('#provider', 'nextcloud');
   await batch.locator('#add').click();
-  await batch.waitForFunction(() => document.getElementById('status').textContent.includes('4 added · 1 already present · 0 failed'));
+  await batch.waitForFunction(() => document.getElementById('status').textContent.includes(chrome.i18n.getMessage('nextcloudResult', ['4', '1', '0'])));
   assert.equal(stored.size, 5);
   const callsBeforeFailure = writes.length;
   denyNextcloud = true;
   await batch.locator('#add').click();
-  await batch.waitForFunction(() => document.getElementById('status').textContent.includes('5 failed'));
+  await batch.waitForFunction(() => document.getElementById('status').textContent.includes(chrome.i18n.getMessage('nextcloudResult', ['0', '0', '5'])));
   assert.equal(writes.length - callsBeforeFailure, 1);
   denyNextcloud = false;
   console.log('PASS: Nextcloud batch preserves event identities and stops the entire batch on invalid credentials');
 
   const settings = await context.newPage();
   await settings.goto(`chrome-extension://${id}/options.html`);
+  assert.equal(await settings.locator('h1').textContent(), await settings.evaluate(() => chrome.i18n.getMessage('settingsHeading')));
+  assert.equal(await settings.locator('html').getAttribute('lang'), (await settings.evaluate(() => chrome.i18n.getUILanguage())).toLowerCase().startsWith('zh') ? 'zh-CN' : 'en');
   await settings.waitForFunction(() => document.getElementById('username').value === 'test');
   assert.equal(await settings.locator('#app-password').inputValue(), '');
   await settings.selectOption('#provider', 'ics');
   await settings.locator('#save-preferences').click();
-  await settings.waitForFunction(() => document.getElementById('status').textContent === 'Preferences saved.');
+  await settings.waitForFunction(() => document.getElementById('status').textContent === chrome.i18n.getMessage('preferencesSaved'));
   await settings.locator('#calendar-url').fill('https://cloud.example.com/apps/calendar');
   await settings.locator('#connect').click();
-  await settings.waitForFunction(() => document.getElementById('status').textContent.includes('specific Nextcloud calendar'));
+  await settings.waitForFunction(() => document.getElementById('status').textContent.includes(chrome.i18n.getMessage('specificCalendarUrl')));
   await settings.locator('#disconnect').click();
-  await settings.waitForFunction(() => document.getElementById('status').textContent.includes('Connection forgotten'));
+  await settings.waitForFunction(() => document.getElementById('status').textContent.includes(chrome.i18n.getMessage('connectionForgotten')));
   assert.equal(await worker.evaluate(async () => !!(await chrome.storage.local.get('nextcloud')).nextcloud), false);
   await settings.screenshot({ path: path.join(output, 'settings.png'), fullPage: true });
   console.log('PASS: preferences persist; passwords stay hidden; invalid calendar URLs rejected; forgetting connection removes credentials');
@@ -241,7 +243,8 @@ try {
 
   denyPdc = true;
   await pdc.locator('.pdc-calendar-action').click();
-  await pdc.waitForFunction(() => document.getElementById('pdc-calendar-status').textContent.includes('Sign in again'));
+  const pdcSessionAttention = await worker.evaluate(() => chrome.i18n.getMessage('pdcSessionAttention'));
+  await pdc.waitForFunction(message => document.getElementById('pdc-calendar-status').textContent.includes(message), pdcSessionAttention);
   assert.ok(readRequests >= 7);
   assert.equal(errors.length, 0, errors.join('\n'));
   assert.equal(unexpected.length, 0, unexpected.join('\n'));
@@ -250,7 +253,8 @@ try {
   const sis = await context.newPage();
   await sis.goto('https://sisn.hkust-gz.edu.cn/classes/my-class-schedule');
   await sis.locator('#add2calendar-sis-toolbar button:not(:disabled)').waitFor();
-  assert.equal(await sis.locator('#add2calendar-sis-toolbar span').textContent(), '1 enrolled class ready');
+  const oneClassReady = await worker.evaluate(() => chrome.i18n.getMessage('classReady', '1'));
+  assert.equal(await sis.locator('#add2calendar-sis-toolbar span').textContent(), oneClassReady);
   const sisBatchOpened = context.waitForEvent('page');
   await sis.locator('#add2calendar-sis-toolbar button').click();
   const sisBatch = await sisBatchOpened;
@@ -270,7 +274,7 @@ try {
   const sisDom = await context.newPage();
   await sisDom.goto('https://sisn.hkust-gz.edu.cn/classes/my-class-schedule?dom=1');
   await sisDom.locator('#add2calendar-sis-toolbar button:not(:disabled)').waitFor();
-  assert.equal(await sisDom.locator('#add2calendar-sis-toolbar span').textContent(), '1 enrolled class ready');
+  assert.equal(await sisDom.locator('#add2calendar-sis-toolbar span').textContent(), oneClassReady);
   const sisDomBatchOpened = context.waitForEvent('page');
   await sisDom.locator('#add2calendar-sis-toolbar button').click();
   const sisDomBatch = await sisDomBatchOpened;

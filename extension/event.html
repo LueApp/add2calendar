@@ -1,19 +1,19 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Add to calendar · Add2Calendar</title><link rel="stylesheet" href="styles.css"></head>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title data-i18n="eventPageTitle">Add to calendar · Add2Calendar</title><link rel="stylesheet" href="styles.css"></head>
 <body><main>
-  <header><div class="brand"><span class="mark" aria-hidden="true">▦</span>Add2Calendar</div><a href="options.html" target="_blank" rel="noopener">Settings</a></header>
-  <p class="eyebrow">Make time for learning</p><h1 id="title">Preparing your event…</h1><p class="muted" id="subtitle">Loading seminar details from PDC.</p>
+  <header><div class="brand"><span class="mark" aria-hidden="true">▦</span>Add2Calendar</div><a href="options.html" target="_blank" rel="noopener" data-i18n="settings">Settings</a></header>
+  <p class="eyebrow" data-i18n="makeTimeEyebrow">Make time for learning</p><h1 id="title" data-i18n="preparingEvent">Preparing your event…</h1><p class="muted" id="subtitle" data-i18n="loadingPdcDetails">Loading seminar details from PDC.</p>
   <div id="content" hidden>
     <section class="card"><div class="grid">
-      <div><label for="provider">Add to</label><select id="provider"><option value="outlook-school">Outlook · school / Microsoft 365</option><option value="outlook-personal">Outlook.com · personal</option><option value="google">Google Calendar</option><option value="nextcloud">Nextcloud</option><option value="ics">Calendar file (.ics)</option></select></div>
-      <div><label for="reminder">Reminder for Nextcloud / calendar file</label><select id="reminder"><option value="0">No reminder</option><option value="5">5 minutes before</option><option value="15" selected>15 minutes before</option><option value="30">30 minutes before</option><option value="60">1 hour before</option><option value="1440">1 day before</option></select></div>
+      <div><label for="provider" data-i18n="addTo">Add to</label><select id="provider"><option value="outlook-school" data-i18n="outlookSchool">Outlook · school / Microsoft 365</option><option value="outlook-personal" data-i18n="outlookPersonal">Outlook.com · personal</option><option value="google" data-i18n="googleCalendar">Google Calendar</option><option value="nextcloud" data-i18n="nextcloud">Nextcloud</option><option value="ics" data-i18n="calendarFile">Calendar file (.ics)</option></select></div>
+      <div><label for="reminder" data-i18n="reminderForFile">Reminder for Nextcloud / calendar file</label><select id="reminder"><option value="0" data-i18n="noReminder">No reminder</option><option value="5" data-i18n="fiveMinutesBefore">5 minutes before</option><option value="15" selected data-i18n="fifteenMinutesBefore">15 minutes before</option><option value="30" data-i18n="thirtyMinutesBefore">30 minutes before</option><option value="60" data-i18n="oneHourBefore">1 hour before</option><option value="1440" data-i18n="oneDayBefore">1 day before</option></select></div>
     </div><p class="help" id="provider-help"></p></section>
-    <section class="card"><h2>Sessions <span id="count" class="badge"></span></h2><p class="help">All times below are China Standard Time (UTC+08:00).</p><div id="sessions"></div>
-      <div class="actions"><button id="add">Add to calendar</button><button id="download" class="secondary">Download .ics</button></div>
+    <section class="card"><h2><span data-i18n="sessions">Sessions</span> <span id="count" class="badge"></span></h2><p class="help" data-i18n="chinaTimeHelp">All times below are China Standard Time (UTC+08:00).</p><div id="sessions"></div>
+      <div class="actions"><button id="add" data-i18n="addToCalendar">Add to calendar</button><button id="download" class="secondary" data-i18n="downloadIcs">Download .ics</button></div>
       <div id="status" role="status" hidden></div>
-      <div id="outlook-import" class="import-guide" hidden><strong>Import all selected sessions once</strong><p>In Outlook: Calendar → Add calendar → Upload from file → choose the downloaded .ics file → select your calendar → Import (or Import and Save).</p><a id="open-outlook" class="button secondary" target="_blank" rel="noopener noreferrer">Open Outlook ↗</a></div>
+      <div id="outlook-import" class="import-guide" hidden><strong data-i18n="importSelectedOnce">Import all selected sessions once</strong><p data-i18n="outlookImportSteps">In Outlook: Calendar → Add calendar → Upload from file → choose the downloaded .ics file → select your calendar → Import (or Import and Save).</p><a id="open-outlook" class="button secondary" target="_blank" rel="noopener noreferrer" data-i18n="openOutlook">Open Outlook ↗</a></div>
     </section>
-    <details><summary>Event details</summary><pre id="description"></pre></details>
-    <p class="footnote">This adds a copy of the event. Later source changes and cancellations are not synchronized. Check the source schedule for updates.</p>
+    <details><summary data-i18n="eventDetails">Event details</summary><pre id="description"></pre></details>
+    <p class="footnote" data-i18n="eventCopyFootnote">This adds a copy of the event. Later source changes and cancellations are not synchronized. Check the source schedule for updates.</p>
   </div><p id="fatal" role="alert" hidden></p>
-</main><script type="module" src="event.js"></script></body></html>
+</main><script src="i18n.js"></script><script type="module" src="event.js"></script></body></html>

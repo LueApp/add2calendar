@@ -1,20 +1,20 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Add multiple events · Add2Calendar</title><link rel="stylesheet" href="styles.css"></head>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title data-i18n="batchPageTitle">Add multiple events · Add2Calendar</title><link rel="stylesheet" href="styles.css"></head>
 <body><main>
-  <header><div class="brand"><span class="mark" aria-hidden="true">▦</span>Add2Calendar</div><a href="options.html" target="_blank" rel="noopener">Settings</a></header>
-  <p class="eyebrow">One batch, fewer clicks</p><h1>Add multiple events</h1><p class="muted" id="subtitle">Loading your enrollments…</p>
+  <header><div class="brand"><span class="mark" aria-hidden="true">▦</span>Add2Calendar</div><a href="options.html" target="_blank" rel="noopener" data-i18n="settings">Settings</a></header>
+  <p class="eyebrow" data-i18n="oneBatchEyebrow">One batch, fewer clicks</p><h1 data-i18n="addMultipleEvents">Add multiple events</h1><p class="muted" id="subtitle" data-i18n="loadingEnrollments">Loading your enrollments…</p>
   <div id="content" hidden>
     <section class="card"><div class="grid">
-      <div><label for="provider">Destination</label><select id="provider"><option value="outlook-school">Outlook · school / Microsoft 365</option><option value="outlook-personal">Outlook.com · personal</option><option value="google">Google Calendar</option><option value="nextcloud">Nextcloud</option><option value="ics">Calendar file (.ics)</option></select></div>
-      <div><label for="reminder">Reminder</label><select id="reminder"><option value="0">No reminder</option><option value="5">5 minutes before</option><option value="15" selected>15 minutes before</option><option value="30">30 minutes before</option><option value="60">1 hour before</option><option value="1440">1 day before</option></select></div>
+      <div><label for="provider" data-i18n="destination">Destination</label><select id="provider"><option value="outlook-school" data-i18n="outlookSchool">Outlook · school / Microsoft 365</option><option value="outlook-personal" data-i18n="outlookPersonal">Outlook.com · personal</option><option value="google" data-i18n="googleCalendar">Google Calendar</option><option value="nextcloud" data-i18n="nextcloud">Nextcloud</option><option value="ics" data-i18n="calendarFile">Calendar file (.ics)</option></select></div>
+      <div><label for="reminder" data-i18n="reminder">Reminder</label><select id="reminder"><option value="0" data-i18n="noReminder">No reminder</option><option value="5" data-i18n="fiveMinutesBefore">5 minutes before</option><option value="15" selected data-i18n="fifteenMinutesBefore">15 minutes before</option><option value="30" data-i18n="thirtyMinutesBefore">30 minutes before</option><option value="60" data-i18n="oneHourBefore">1 hour before</option><option value="1440" data-i18n="oneDayBefore">1 day before</option></select></div>
     </div><p class="help" id="provider-help"></p>
-    <div class="actions"><button id="add">Download for Outlook</button><span id="selection-count" aria-live="polite"></span></div>
+    <div class="actions"><button id="add" data-i18n="downloadForOutlook">Download for Outlook</button><span id="selection-count" aria-live="polite"></span></div>
     <div id="status" role="status" hidden></div>
-    <div id="import-guide" class="import-guide" hidden><strong id="import-title">Import this batch once</strong><p id="import-steps"></p><a id="open-calendar" class="button secondary" target="_blank" rel="noopener noreferrer">Open Outlook ↗</a></div>
+    <div id="import-guide" class="import-guide" hidden><strong id="import-title" data-i18n="importBatchOnce">Import this batch once</strong><p id="import-steps"></p><a id="open-calendar" class="button secondary" target="_blank" rel="noopener noreferrer" data-i18n="openOutlook">Open Outlook ↗</a></div>
     </section>
-    <section class="card"><h2 id="events-title">Your enrolled events</h2><p class="help" id="events-help">Upcoming sessions are selected initially. Uncheck events already in your calendar. All times below are China Standard Time (UTC+08:00).</p>
-    <div class="actions"><button type="button" id="select-upcoming" class="secondary">Upcoming only</button><button type="button" id="select-all" class="secondary">Select all</button><button type="button" id="select-none" class="secondary">Clear selection</button></div><div id="events"></div></section>
-    <section id="unavailable" class="card" hidden><h2>Events that could not be included</h2><ul id="errors"></ul></section>
-    <p class="footnote" id="source-note">Imported events are copies. Later source changes are not synchronized. Repeated Outlook or Google imports may create duplicates.</p>
+    <section class="card"><h2 id="events-title" data-i18n="yourEnrolledEvents">Your enrolled events</h2><p class="help" id="events-help" data-i18n="upcomingHelp">Upcoming sessions are selected initially. Uncheck events already in your calendar. All times below are China Standard Time (UTC+08:00).</p>
+    <div class="actions"><button type="button" id="select-upcoming" class="secondary" data-i18n="upcomingOnly">Upcoming only</button><button type="button" id="select-all" class="secondary" data-i18n="selectAll">Select all</button><button type="button" id="select-none" class="secondary" data-i18n="clearSelection">Clear selection</button></div><div id="events"></div></section>
+    <section id="unavailable" class="card" hidden><h2 data-i18n="unavailableEvents">Events that could not be included</h2><ul id="errors"></ul></section>
+    <p class="footnote" id="source-note" data-i18n="batchCopyFootnote">Imported events are copies. Later source changes are not synchronized. Repeated Outlook or Google imports may create duplicates.</p>
   </div><p id="fatal" role="alert" hidden></p>
-</main><script type="module" src="batch.js"></script></body></html>
+</main><script src="i18n.js"></script><script type="module" src="batch.js"></script></body></html>

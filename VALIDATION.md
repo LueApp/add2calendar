@@ -1,10 +1,10 @@
 # Validation — 2026-09-07
 
-Version: **0.3.2**. Runtime: no dependencies or build step. Minimum Chrome version: 120.
+Version: **0.3.3**. Runtime: no dependencies or build step. Minimum Chrome version: 120.
 
 ## Completed
 
-- **20 unit tests passed** with Node.js 24.15.0. Covered China-to-UTC conversion, recurring weekday expansion, missing/invalid schedules, stable identifiers, conflicting venues, Unicode iCalendar escaping and 75-octet folding, session selection, Outlook/Google URL parameters, valid Nextcloud URLs, conditional CalDAV writes, partial failures, retries, UTF-8 authentication, SIS enrolled/waitlisted filtering, and SIS recurring meeting conversion.
+- **21 unit tests passed** with Node.js 24.15.0. Covered China-to-UTC conversion, recurring weekday expansion, missing/invalid schedules, stable identifiers, conflicting venues, Unicode iCalendar escaping and 75-octet folding, session selection, Outlook/Google URL parameters, valid Nextcloud URLs, conditional CalDAV writes, partial failures, retries, UTF-8 authentication, SIS enrolled/waitlisted filtering, SIS recurring meeting conversion, and English/Chinese catalog parity.
 - **14 browser integration checks passed** with the actual extension loaded in an isolated **Chrome for Testing 153.0.8010.12** profile via Playwright 1.63.0. PDC, SIS, and Nextcloud responses were synthetic; the browser timezone was America/New_York.
 - Verified buttons only appear for enrolled rows, ignore remark rows, appear after a new enrollment, and disappear after a drop.
 - Verified paginated enrollment reads and fresh data lookup on click.
@@ -18,6 +18,7 @@ Version: **0.3.2**. Runtime: no dependencies or build step. Minimum Chrome versi
 - Verified preferences, hidden saved passwords, invalid Nextcloud URL rejection, forgetting a connection, and expired PDC login feedback.
 - Verified a synthetic SIS schedule response activates **Add class schedule**, excludes a waitlisted class, opens the batch preview, expands recurring meetings, and downloads an `.ics` file with SIS-specific identifiers and source links.
 - Verified the visible SIS table activates the same control when the API response is missed. Class sections distinguish titles; same-time venue conflicts remain exportable through per-session single/combined venue choices, and the chosen venue reaches the `.ics` file.
+- Verified Chrome’s Chinese UI locale localizes settings, event and batch previews, injected PDC/SIS controls, provider guidance, validation messages, and calendar descriptions.
 - Confirmed no browser page errors or unexpected network destinations in the final integration run.
 - Reviewed screenshots of the single-session preview, multiple-session preview, and settings page.
 - Checked JavaScript syntax and manifest file references.

@@ -1,6 +1,7 @@
 (() => {
   if (globalThis.__add2CalendarSisContentInstalled) return;
   globalThis.__add2CalendarSisContentInstalled = true;
+  const t = globalThis.Add2CalendarI18n.t;
   const supportedPath = '/classes/my-class-schedule';
   let courses = [], busy = false, loaded = false, errorMessage = '';
 
@@ -105,15 +106,15 @@
     if (!toolbar) {
       toolbar = document.createElement('aside');
       toolbar.id = 'add2calendar-sis-toolbar';
-      toolbar.innerHTML = '<button type="button">Loading class schedule…</button><span role="status">Waiting for SIS</span>';
+      toolbar.innerHTML = '<button type="button"></button><span role="status"></span>';
       document.body.append(toolbar);
       toolbar.querySelector('button').addEventListener('click', openSchedule);
     }
     toolbar.hidden = false;
     const count = enrolledCount(), button = toolbar.querySelector('button'), status = toolbar.querySelector('span');
     button.disabled = busy || !count;
-    setText(button, busy ? 'Preparing calendar…' : count ? 'Add class schedule' : 'Loading class schedule…');
-    setText(status, errorMessage || (count ? `${count} enrolled class${count === 1 ? '' : 'es'} ready` : loaded ? 'No enrolled classes found' : 'Waiting for SIS'));
+    setText(button, busy ? t('preparingCalendar') : count ? t('addClassSchedule') : t('loadingClassSchedule'));
+    setText(status, errorMessage || (count ? t(count === 1 ? 'classReady' : 'classesReady', String(count)) : loaded ? t('noEnrolledClassesFound') : t('waitingForSis')));
   }
 
   async function openSchedule() {
@@ -123,7 +124,7 @@
       const response = await chrome.runtime.sendMessage({ type: 'SIS_OPEN_BATCH', courses });
       if (response?.error) throw new Error(response.error);
     } catch (error) {
-      errorMessage = error.message || 'Could not prepare the class schedule.';
+      errorMessage = error.message || t('prepareScheduleFailed');
     } finally { busy = false; render(); }
   }
 

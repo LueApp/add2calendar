@@ -1,5 +1,6 @@
 import { cleanText } from './calendar.mjs';
 import { normalizeBatch } from './batch.mjs';
+import { t } from './i18n.mjs';
 
 export const SIS_SOURCE = 'https://sisn.hkust-gz.edu.cn/classes/my-class-schedule';
 
@@ -19,7 +20,7 @@ function courseCode(course) {
 }
 
 export function sisCourseToEvent(course) {
-  if (!course || typeof course !== 'object') throw new Error('SIS returned an invalid class record.');
+  if (!course || typeof course !== 'object') throw new Error(t('invalidSisRecord', undefined, 'SIS returned an invalid class record.'));
   const code = courseCode(course);
   const section = cleanText(course.classSection, 100);
   const classNumber = cleanText(course.classNbr, 100);
@@ -33,7 +34,7 @@ export function sisCourseToEvent(course) {
     activityEventCode: `SIS-${classId}`,
     description: [code, section, title].filter(Boolean).join(' · '),
     eventInstructors: instructors.map(name => ({ name })),
-    remarks: [`Class section: ${section || 'not specified'}`, classNumber && `Class number: ${classNumber}`].filter(Boolean).join('\n'),
+    remarks: [t('classSectionDescription', section || t('notSpecified', undefined, 'not specified'), `Class section: ${section || 'not specified'}`), classNumber && t('classNumberDescription', classNumber, `Class number: ${classNumber}`)].filter(Boolean).join('\n'),
     sourceName: 'SIS',
     sourceUrl: SIS_SOURCE,
     uidNamespace: 'sis',
@@ -61,8 +62,8 @@ export function sisCourseToEvent(course) {
 }
 
 export async function normalizeSisBatch(courses) {
-  if (!Array.isArray(courses)) throw new Error('SIS did not provide a class schedule. Reload SIS and try again.');
+  if (!Array.isArray(courses)) throw new Error(t('sisNoSchedule', undefined, 'SIS did not provide a class schedule. Reload SIS and try again.'));
   const enrolled = courses.filter(isEnrolledCourse);
-  if (!enrolled.length) throw new Error('No enrolled SIS classes are available to add.');
+  if (!enrolled.length) throw new Error(t('sisNoEnrolled', undefined, 'No enrolled SIS classes are available to add.'));
   return normalizeBatch(enrolled.map(sisCourseToEvent));
 }

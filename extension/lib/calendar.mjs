@@ -1,3 +1,5 @@
+import { t } from './i18n.mjs';
+
 export const SOURCE = 'https://pdc.hkust-gz.edu.cn/enrollment-records';
 const DAY = 86400000;
 const WEEKDAYS = ['meetOnSun', 'meetOnMon', 'meetOnTue', 'meetOnWed', 'meetOnThu', 'meetOnFri', 'meetOnSat'];
@@ -10,16 +12,16 @@ function dayValue(value, sourceName = 'PDC') {
   const date = String(value ?? '').match(/^(\d{4}-\d{2}-\d{2})(?:$|T| )/)?.[1];
   const ms = Date.parse(`${date}T00:00:00Z`);
   if (!date || !Number.isFinite(ms) || new Date(ms).toISOString().slice(0, 10) !== date)
-    throw new Error(`${sourceName} returned an invalid schedule date. Check the source schedule.`);
+    throw new Error(t('invalidScheduleDate', sourceName, `${sourceName} returned an invalid schedule date. Check the source schedule.`));
   return ms;
 }
 
 function clockMinutes(hour, minute, allowMidnight = false, sourceName = 'PDC') {
   if (hour === null || hour === undefined || hour === '' || minute === null || minute === undefined || minute === '')
-    throw new Error(`${sourceName} has not supplied a complete start/end time.`);
+    throw new Error(t('missingScheduleTime', sourceName, `${sourceName} has not supplied a complete start/end time.`));
   const h = Number(hour), m = Number(minute);
   if (!Number.isInteger(h) || !Number.isInteger(m) || h < 0 || m < 0 || m > 59 || h > 23 && !(allowMidnight && h === 24 && m === 0))
-    throw new Error(`${sourceName} returned an invalid schedule time.`);
+    throw new Error(t('invalidScheduleTime', sourceName, `${sourceName} returned an invalid schedule time.`));
   return h * 60 + m;
 }
 
@@ -32,27 +34,27 @@ async function uidFor(code, start, end, namespace = 'pdc') {
 }
 
 export async function normalizeEvent(raw) {
-  if (!raw || typeof raw !== 'object') throw new Error('No calendar event was supplied.');
+  if (!raw || typeof raw !== 'object') throw new Error(t('noCalendarEvent', undefined, 'No calendar event was supplied.'));
   const sourceName = cleanText(raw.sourceName || 'PDC', 50);
   const sourceUrl = cleanText(raw.sourceUrl || SOURCE, 1000);
   const uidNamespace = /^[a-z0-9-]{1,30}$/.test(raw.uidNamespace) ? raw.uidNamespace : 'pdc';
   let parsedSource;
-  try { parsedSource = new URL(sourceUrl); } catch { throw new Error(`${sourceName} supplied an invalid source URL.`); }
-  if (parsedSource.protocol !== 'https:') throw new Error(`${sourceName} supplied an invalid source URL.`);
+  try { parsedSource = new URL(sourceUrl); } catch { throw new Error(t('invalidSourceUrl', sourceName, `${sourceName} supplied an invalid source URL.`)); }
+  if (parsedSource.protocol !== 'https:') throw new Error(t('invalidSourceUrl', sourceName, `${sourceName} supplied an invalid source URL.`));
   const code = cleanText(raw.activityEventCode, 200);
   const title = cleanText(raw.description || raw.title || raw.eventName, 500);
-  if (!code || !title) throw new Error('The event code or title is missing.');
+  if (!code || !title) throw new Error(t('missingEventIdentity', undefined, 'The event code or title is missing.'));
   if (!Array.isArray(raw.eventSchedules) || !raw.eventSchedules.length || raw.eventSchedules.length > 200)
-    throw new Error(`This ${sourceName} entry has no usable schedule yet. Try again after the source publishes it.`);
+    throw new Error(t('noUsableSchedule', sourceName, `This ${sourceName} entry has no usable schedule yet. Try again after the source publishes it.`));
   const sessions = [], seen = new Map();
   for (const schedule of raw.eventSchedules) {
     const first = dayValue(schedule.dateBegin, sourceName), last = schedule.dateEnd ? dayValue(schedule.dateEnd, sourceName) : first;
-    if (last < first || last - first > 732 * DAY) throw new Error(`The event date range needs to be checked in ${sourceName}.`);
+    if (last < first || last - first > 732 * DAY) throw new Error(t('checkDateRange', sourceName, `The event date range needs to be checked in ${sourceName}.`));
     const startMinute = clockMinutes(schedule.hourBegin, schedule.minuteBegin, false, sourceName);
     const endMinute = clockMinutes(schedule.hourEnd, schedule.minuteEnd, true, sourceName);
-    if (endMinute <= startMinute) throw new Error(`The end time is not after the start time. Check this schedule in ${sourceName}.`);
+    if (endMinute <= startMinute) throw new Error(t('invalidEndTime', sourceName, `The end time is not after the start time. Check this schedule in ${sourceName}.`));
     const days = WEEKDAYS.map(key => isYes(schedule[key]));
-    if (last !== first && !days.some(Boolean)) throw new Error('This event spans several dates without meeting weekdays. Its sessions cannot be inferred safely.');
+    if (last !== first && !days.some(Boolean)) throw new Error(t('missingWeekdays', undefined, 'This event spans several dates without meeting weekdays. Its sessions cannot be inferred safely.'));
     for (let date = first; date <= last; date += DAY) {
       if (last !== first && !days[new Date(date).getUTCDay()]) continue;
       const start = new Date(date + (startMinute - 480) * 60000).toISOString();
@@ -69,19 +71,19 @@ export async function normalizeEvent(raw) {
       const session = { uid: await uidFor(code, start, end, uidNamespace), start, end, location };
       seen.set(identity, session);
       sessions.push(session);
-      if (sessions.length > 500) throw new Error('This event has too many sessions to export at once.');
+      if (sessions.length > 500) throw new Error(t('tooManySessions', undefined, 'This event has too many sessions to export at once.'));
     }
   }
-  if (!sessions.length) throw new Error('No meeting dates match this event’s schedule.');
+  if (!sessions.length) throw new Error(t('noMatchingDates', undefined, 'No meeting dates match this event’s schedule.'));
   sessions.sort((a, b) => a.start.localeCompare(b.start));
   const instructors = Array.isArray(raw.eventInstructors) ? raw.eventInstructors.map(i => cleanText(i.name, 200)).filter(Boolean).join(', ') : '';
   const description = [
-    `${sourceName} event: ${code}`,
-    instructors && `Instructor: ${instructors}`,
-    raw.enquiryEmail && `Enquiries: ${cleanText(raw.enquiryEmail, 500)}`,
+    t('sourceEventDescription', [sourceName, code], `${sourceName} event: ${code}`),
+    instructors && t('instructorDescription', instructors, `Instructor: ${instructors}`),
+    raw.enquiryEmail && t('enquiriesDescription', cleanText(raw.enquiryEmail, 500), `Enquiries: ${cleanText(raw.enquiryEmail, 500)}`),
     cleanText(raw.remarks),
-    `Source: ${parsedSource.href}`,
-    `Added from ${sourceName}. Check ${sourceName} for later schedule changes or cancellations.`
+    t('sourceDescription', parsedSource.href, `Source: ${parsedSource.href}`),
+    t('addedFromDescription', sourceName, `Added from ${sourceName}. Check ${sourceName} for later schedule changes or cancellations.`)
   ].filter(Boolean).join('\n\n');
   return { code, title, description, url: parsedSource.href, sourceName, sessions };
 }
@@ -108,8 +110,8 @@ export function makeICS(event, sessions = event.sessions, reminder = 15, now = n
 }
 
 export function makeCalendarICS(entries, reminder = 15, now = new Date()) {
-  if (!entries.some(entry => entry.sessions.length)) throw new Error('Select at least one session.');
-  if (![0, 5, 15, 30, 60, 1440].includes(Number(reminder))) throw new Error('Invalid reminder.');
+  if (!entries.some(entry => entry.sessions.length)) throw new Error(t('selectAtLeastOne', undefined, 'Select at least one session.'));
+  if (![0, 5, 15, 30, 60, 1440].includes(Number(reminder))) throw new Error(t('invalidReminder', undefined, 'Invalid reminder.'));
   const lines = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//Add2Calendar//EN', 'CALSCALE:GREGORIAN'];
   const seen = new Set();
   for (const { event, sessions } of entries) {
@@ -135,17 +137,17 @@ export function providerURL(provider, event, session) {
   } else if (provider === 'outlook-school' || provider === 'outlook-personal') {
     url = new URL(provider === 'outlook-school' ? 'https://outlook.office.com/calendar/0/deeplink/compose' : 'https://outlook.live.com/calendar/0/deeplink/compose');
     url.search = new URLSearchParams({ path: '/calendar/action/compose', rru: 'addevent', subject: event.title, startdt: session.start, enddt: session.end, body: event.description, location: session.location, allday: 'false' });
-  } else throw new Error('Unknown calendar provider.');
+  } else throw new Error(t('unknownProvider', undefined, 'Unknown calendar provider.'));
   return url.href;
 }
 
 export function calendarURL(value) {
   let url;
-  try { url = new URL(value); } catch { throw new Error('Enter the full private CalDAV calendar URL.'); }
+  try { url = new URL(value); } catch { throw new Error(t('fullCaldavUrl', undefined, 'Enter the full private CalDAV calendar URL.')); }
   if (url.protocol !== 'https:' || url.username || url.password || url.search || url.hash)
-    throw new Error('Use an HTTPS calendar URL without embedded credentials, query parameters, or fragments.');
+    throw new Error(t('httpsCalendarUrl', undefined, 'Use an HTTPS calendar URL without embedded credentials, query parameters, or fragments.'));
   if (!/\/remote\.php\/dav\/calendars\/[^/]+\/[^/]+\/?$/.test(url.pathname))
-    throw new Error('Copy the private link for a specific Nextcloud calendar (…/remote.php/dav/calendars/user/calendar/).');
+    throw new Error(t('specificCalendarUrl', undefined, 'Copy the private link for a specific Nextcloud calendar (…/remote.php/dav/calendars/user/calendar/).'));
   url.pathname = url.pathname.replace(/\/?$/, '/');
   return url.href;
 }

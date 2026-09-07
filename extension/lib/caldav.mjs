@@ -1,7 +1,8 @@
 import { calendarURL, makeICS } from './calendar.mjs';
+import { t } from './i18n.mjs';
 
 export function basicAuth(username, password) {
-  if (!username || username.includes(':') || !password) throw new Error('Enter your Nextcloud username and app password.');
+  if (!username || username.includes(':') || !password) throw new Error(t('nextcloudCredentials', undefined, 'Enter your Nextcloud username and app password.'));
   const bytes = new TextEncoder().encode(`${username}:${password}`);
   return 'Basic ' + btoa(Array.from(bytes, b => String.fromCharCode(b)).join(''));
 }
@@ -24,12 +25,12 @@ export async function addToNextcloud(config, event, sessions, reminder, fetcher 
       else if ([401, 403].includes(response.status)) {
         result.stop = true;
         result.failed += sessions.length - index;
-        result.errors.push(response.status === 401 ? 'Nextcloud rejected the username or app password. Check Settings.' : 'This account cannot write to the selected calendar. Check Settings.');
+        result.errors.push(response.status === 401 ? t('nextcloudRejected', undefined, 'Nextcloud rejected the username or app password. Check Settings.') : t('nextcloudNoWrite', undefined, 'This account cannot write to the selected calendar. Check Settings.'));
         break;
-      } else throw new Error(`Nextcloud returned HTTP ${response.status}. Check the calendar URL and try again.`);
+      } else throw new Error(t('nextcloudHttp', String(response.status), `Nextcloud returned HTTP ${response.status}. Check the calendar URL and try again.`));
     } catch (error) {
       result.failed++;
-      result.errors.push(error instanceof TypeError || error.name === 'TimeoutError' ? 'Could not reach Nextcloud. Check the connection, server permission, and calendar URL.' : error.message);
+      result.errors.push(error instanceof TypeError || error.name === 'TimeoutError' ? t('nextcloudUnreachable', undefined, 'Could not reach Nextcloud. Check the connection, server permission, and calendar URL.') : error.message);
     }
   }
   result.errors = [...new Set(result.errors)];

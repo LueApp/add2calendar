@@ -26,6 +26,7 @@ The deployable site is written to `web-dist/` and includes the current extension
 - Multiple sessions and weekly meeting schedules are supported.
 - PDC and SIS times are interpreted in **China Standard Time, UTC+08:00**, regardless of your computer timezone.
 - Uses your existing PDC or SIS session; complete university authentication normally.
+- The extension interface follows Chrome’s UI language, with complete English and Simplified Chinese translations.
 
 **Added entries are copies. Later PDC or SIS changes and cancellations are not automatically synchronized.** This is an independent student tool, not an official university application.
 
@@ -164,7 +165,7 @@ The ZIP is written to `dist/`. To load the source directly, select `extension/` 
 | `scripts/browser-test.mjs` | Actual extension tested against simulated PDC, SIS, and calendar responses |
 | `scripts/package.py` | Creates the ZIP with `manifest.json` at its root |
 
-Version 0.3.2 passed **20 unit tests and 14 browser integration checks**. Automated tests do not write to real student calendars. See [VALIDATION.md](VALIDATION.md) for test scope and live checks still needed.
+Version 0.3.3 passed **21 unit tests and 14 browser integration checks**. Automated tests do not write to real student calendars. See [VALIDATION.md](VALIDATION.md) for test scope and live checks still needed.
 
 ## License and references
 
